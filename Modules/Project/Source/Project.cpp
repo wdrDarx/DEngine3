@@ -10,7 +10,7 @@ void Project::OnLoad()
 		//std::cout << "Failed to initialize OpenGL context" << std::endl;
 	}
 
-	LOG_INFO("Loaded Project, random = " + std::to_string(GET_SINGLETON(Rand).Float()));
+	LOG_INFO("Loaded Project");
 }
 
 void Project::OnUnload()

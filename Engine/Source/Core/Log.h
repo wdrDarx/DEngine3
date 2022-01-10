@@ -1,10 +1,10 @@
 #pragma once
 #include "spdlog/spdlog.h"
 #include "Core/Core.h"
-
+#include "Misc/Singleton.h"
 
 #define LOG_FILE 1
-
+#define STRING(x) std::to_string(x)
 
 class Log 
 {

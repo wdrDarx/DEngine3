@@ -11,6 +11,10 @@
 
 //Utils
 #include "Utils/Rand.h"
+#include "Utils/Timer.h"
+
+//Misc
+#include "Misc/Singleton.h"
 
 //Framework
 #include "Framework/Tick.h"
@@ -21,5 +25,6 @@
 #include "Framework/ModuleManager.h"
 #include "Framework/Registry.h"
 #include "Framework/Module.h"
+#include "Framework/Property.h"
 
 

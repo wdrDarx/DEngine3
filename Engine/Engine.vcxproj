@@ -153,11 +153,15 @@
     <ClInclude Include="Source\Framework\Module.h" />
     <ClInclude Include="Source\Framework\ModuleManager.h" />
     <ClInclude Include="Source\Framework\ObjectBase.h" />
+    <ClInclude Include="Source\Framework\Property.h" />
     <ClInclude Include="Source\Framework\Registry.h" />
     <ClInclude Include="Source\Framework\Tick.h" />
+    <ClInclude Include="Source\Misc\Singleton.h" />
     <ClInclude Include="Source\Serialization\Buffer.h" />
     <ClInclude Include="Source\Utils\FileSystem.h" />
     <ClInclude Include="Source\Utils\Rand.h" />
+    <ClInclude Include="Source\Utils\Thread.h" />
+    <ClInclude Include="Source\Utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Log.cpp" />
@@ -167,6 +171,9 @@
     <ClCompile Include="Source\Framework\Module.cpp" />
     <ClCompile Include="Source\Framework\ModuleManager.cpp" />
     <ClCompile Include="Source\Framework\ObjectBase.cpp" />
+    <ClCompile Include="Source\Framework\Property.cpp" />
+    <ClCompile Include="Source\Misc\Singleton.cpp" />
+    <ClCompile Include="Source\Serialization\Buffer.cpp" />
     <ClCompile Include="Source\Utils\FileSystem.cpp" />
     <ClCompile Include="Source\Utils\Rand.cpp" />
   </ItemGroup>

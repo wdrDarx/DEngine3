@@ -1,7 +1,7 @@
 #pragma once
 #include <random>
 #include "Core/Core.h"
-
+#include "Misc/Singleton.h"
 
 /*
 	static class that provides random value functions (MAKE SURE TO CALL THE RAND FUNCTIONS FROM THE ENGINE MODULE FILES BECAUSE THE RANDOM ENGINE IS A STATIC VAR)

@@ -10,8 +10,9 @@ void GameFramework::OnLoad()
 		//std::cout << "Failed to initialize OpenGL context" << std::endl;
 	}
 
-	LOG_INFO("Loaded Game Framework, random = " + std::to_string(GET_SINGLETON(Rand).Float()));
-	
+	LOG_INFO("Loaded Game Framework");
+	Property* prop = GET_SINGLETON(PropertyRegistery).Make({"FloatProperty", "Engine"});
+
 }
 
 void GameFramework::OnUnload()

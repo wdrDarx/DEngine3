@@ -2,35 +2,37 @@
 #include "Core/Core.h"
 #include "Core/Log.h"
 
-#define REGISTER_OBJECT(RegistryRef, ObjectClass, ModuleClass) RegistryRef.Register<ObjectClass>({OBJECT_STATIC_CLASS(ObjectClass).GetObjectClassType(), #ObjectClass, #ModuleClass});
-#define UNREGISTER_OBJECT(RegistryRef, ObjectClass, ModuleClass) RegistryRef.Unregister({OBJECT_STATIC_CLASS(ObjectClass).GetObjectClassType(), #ObjectClass, #ModuleClass});
+#define REGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, #ModuleClass});
+#define UNREGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, #ModuleClass});
 
-#define REGISTER_STRUCT(RegistryRef, StructClass, ModuleClass) RegistryRef.Register<StructClass>({#StructClass, #ModuleClass});
-#define UNREGISTER_STRUCT(RegistryRef, StructClass, ModuleClass) RegistryRef.Unregister({#StructClass, #ModuleClass});
+#define REGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, #ModuleClass});
+#define UNREGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, #ModuleClass});
+
+#define REGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistery).Register<PropertyClass>({#PropertyClass, #ModuleClass});
+#define UNREGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistery).Unregister({#PropertyClass, #ModuleClass});
 
 //same as register struct
-#define REGISTER_ENUM(RegistryRef, EnumClass, ModuleClass) RegistryRef.Register<EnumClass>({#EnumClass, #ModuleClass});
-#define UNREGISTER_ENUM(RegistryRef, EnumClass, ModuleClass) RegistryRef.Unregister({#EnumClass, #ModuleClass});
+#define REGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<EnumClass>({#EnumClass, #ModuleClass});
+#define UNREGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#EnumClass, #ModuleClass});
 
-#define REGISTER_ASSETCLASS(RegistryRef, AssetClass, ModuleClass) RegistryRef.Register<AssetClass>({#AssetClass, #ModuleClass});
-#define UNREGISTER_ASSETCLASS(RegistryRef, AssetClass, ModuleClass) RegistryRef.Unregister({#AssetClass, #ModuleClass});
+#define REGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, #ModuleClass});
+#define UNREGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, #ModuleClass});
 
 
 struct ObjectRegisterKey
 {
-	ObjectClassType type;
 	std::string name;
 	std::string AssignedModuleName;
 
 	bool operator==(const ObjectRegisterKey& other) const
 	{
-		return (type == other.type && name == other.name && AssignedModuleName == other.AssignedModuleName);
+		return (name == other.name && AssignedModuleName == other.AssignedModuleName);
 	}
 };
 
+//same class cuz of SetAssociatedModuleName for all objects
 struct StructRegisterKey
 {
-	//just the name of the class
 	std::string name;
 	std::string AssignedModuleName;
 
@@ -39,6 +41,8 @@ struct StructRegisterKey
 		return (name == other.name && AssignedModuleName == other.AssignedModuleName);
 	}
 };
+
+using PropertyRegisterKey = StructRegisterKey;
 
 namespace std 
 {
@@ -51,9 +55,8 @@ namespace std
 			using std::hash;
 			using std::string;
 
-			return ((hash<int>()((int)k.type)
-				^ (hash<string>()(k.name) << 1)) >> 1)			
-				^ (hash<string>()(k.AssignedModuleName) << 1);				
+			return hash<std::string>()(k.name)
+				^ (hash<string>()(k.AssignedModuleName) << 1);
 		}
 	};
 
@@ -74,7 +77,6 @@ namespace std
 }
 
 class Application;
-
 template<typename Key, typename T, typename... ConstructionArgs>
 class _RegistryBase
 {
@@ -125,7 +127,6 @@ public:
 		{
 			LOG_WARN("Class isnt registered");
 		}
-
 	}
 
 public:
@@ -176,12 +177,62 @@ public:
 	//here just in case i change some mad shit
 	Ref<Application> m_App;
 };
+
 //they are the same basically
 using AssetRegisterKey = StructRegisterKey;
 class Asset;
 class ObjectBase;
 struct StructBase;
+struct Property;
 
 using ObjectRegistry = _RegistryBase<ObjectRegisterKey, ObjectBase>;
 using StructRegistry = _RegistryBase<StructRegisterKey, StructBase>;
 using AssetRegistry = _RegistryBase<AssetRegisterKey, Asset>;
+using PropertyRegistery = _RegistryBase<PropertyRegisterKey, Property>;
+
+DEFINE_SINGLETON(ObjectRegistry, Get_ObjectRegistry);
+DEFINE_SINGLETON(StructRegistry, Get_StructRegistry);
+DEFINE_SINGLETON(AssetRegistry, Get_AssetRegistry);
+DEFINE_SINGLETON(PropertyRegistery, Get_PropertyRegistery);
+
+template<class T, class Module>
+struct AutoRegister
+{
+	public:
+		AutoRegister()
+		{
+			m_Dummy;
+		}	
+		
+		virtual bool DoRegister() = 0;
+
+		static bool Register()
+		{
+			ClassType type(typeid(T));
+			ClassType module(typeid(Module));
+
+			if constexpr (std::is_base_of<ObjectBase, T>::value)
+			{
+				GET_SINGLETON(ObjectRegistry).Register<T>({ type.Name , module.Name });
+			}
+
+			if constexpr (std::is_base_of<StructBase, T>::value)
+			{
+				GET_SINGLETON(StructRegistry).Register<T>({ type.Name , module.Name });
+			}
+
+			if constexpr (std::is_base_of<Property, T>::value)
+			{
+				GET_SINGLETON(PropertyRegistery).Register<T>({ type.Name , module.Name });
+			}		
+
+			return true;
+		}
+
+		static bool m_Dummy;
+};
+
+template<class T, class Module>
+bool AutoRegister<T, Module>::m_Dummy = AutoRegister<T, Module>::Register();
+
+#define AUTO_REGISTER() bool DoRegister() override { return true; }
