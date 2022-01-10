@@ -32,7 +32,8 @@ project "GameFramework"
 		IncludeDir["STB_IMAGE"],
 		IncludeDir["ASSIMP"],
 		IncludeDir["Json"],
-		IncludeDir["PhysX"]
+		IncludeDir["PhysX"],
+		IncludeDir["SPD_LOG"]
 	}
 
 	links
@@ -94,7 +95,8 @@ project "Project"
 		IncludeDir["ASSIMP"],
 		IncludeDir["OpenVR"],
 		IncludeDir["Json"],
-		IncludeDir["PhysX"]
+		IncludeDir["PhysX"],
+		IncludeDir["SPD_LOG"]
 	}
 
 	links

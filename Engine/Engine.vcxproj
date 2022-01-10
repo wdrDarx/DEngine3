@@ -75,7 +75,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DENGINE_EXPORT;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\spdlog\include;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -96,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DENGINE_EXPORT;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\spdlog\include;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -122,7 +122,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DENGINE_EXPORT;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_STATIC_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\spdlog\include;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -141,6 +141,35 @@
       <AdditionalDependencies>..\vendor\PhysX\lib\Runtime\PhysX_static_64.lib;..\vendor\PhysX\lib\Runtime\PhysXCharacterKinematic_static_64.lib;..\vendor\PhysX\lib\Runtime\PhysXCommon_static_64.lib;..\vendor\PhysX\lib\Runtime\PhysXCooking_static_64.lib;..\vendor\PhysX\lib\Runtime\PhysXExtensions_static_64.lib;..\vendor\PhysX\lib\Runtime\PhysXFoundation_static_64.lib;..\vendor\PhysX\lib\Runtime\PhysXPvdSDK_static_64.lib;..\vendor\Assimp\lib\Runtime\assimp.lib;..\Vendor\zlib\lib\zlibstatic.lib;..\Vendor\irrXML\lib\IrrXML.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Core\Core.h" />
+    <ClInclude Include="Source\Core\Log.h" />
+    <ClInclude Include="Source\Core\Types.h" />
+    <ClInclude Include="Source\DEngine.h" />
+    <ClInclude Include="Source\Framework\Application.h" />
+    <ClInclude Include="Source\Framework\AppObject.h" />
+    <ClInclude Include="Source\Framework\Engine.h" />
+    <ClInclude Include="Source\Framework\FrameworkMacros.h" />
+    <ClInclude Include="Source\Framework\Module.h" />
+    <ClInclude Include="Source\Framework\ModuleManager.h" />
+    <ClInclude Include="Source\Framework\ObjectBase.h" />
+    <ClInclude Include="Source\Framework\Registry.h" />
+    <ClInclude Include="Source\Framework\Tick.h" />
+    <ClInclude Include="Source\Serialization\Buffer.h" />
+    <ClInclude Include="Source\Utils\FileSystem.h" />
+    <ClInclude Include="Source\Utils\Rand.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Core\Log.cpp" />
+    <ClCompile Include="Source\Framework\Application.cpp" />
+    <ClCompile Include="Source\Framework\AppObject.cpp" />
+    <ClCompile Include="Source\Framework\Engine.cpp" />
+    <ClCompile Include="Source\Framework\Module.cpp" />
+    <ClCompile Include="Source\Framework\ModuleManager.cpp" />
+    <ClCompile Include="Source\Framework\ObjectBase.cpp" />
+    <ClCompile Include="Source\Utils\FileSystem.cpp" />
+    <ClCompile Include="Source\Utils\Rand.cpp" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vendor\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>

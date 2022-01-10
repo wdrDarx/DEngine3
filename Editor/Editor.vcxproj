@@ -78,7 +78,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Engine\Source;Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Engine\Source;Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;..\Vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -102,7 +102,7 @@ IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Debug-win
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Engine\Source;Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Engine\Source;Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;..\Vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -131,7 +131,7 @@ IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Release-w
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Engine\Source;Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Engine\Source;Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;..\Vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -153,6 +153,9 @@ IF NOT EXIST ..\bin\Runtime-windows-x86_64\Editor\Engine (mkdir ..\bin\Runtime-w
 IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Runtime-windows-x86_64\Editor\Engine &gt; nul) ELSE (xcopy /Q /Y /I ..\EngineContent  ..\bin\Runtime-windows-x86_64\Editor\Engine &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Source.cpp" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</Project>

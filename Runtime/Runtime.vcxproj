@@ -78,7 +78,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;DENGINE_RUNTIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Engine\Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Engine\Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;..\Vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -96,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;DENGINE_RUNTIME;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Engine\Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Engine\Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;..\Vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -119,7 +119,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;DENGINE_RUNTIME;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Engine\Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Engine\Source;..\Vendor\GLFW\include;..\Vendor\GLAD\include;..\Vendor\ImGui;..\Vendor\GLM;..\Vendor\ObjLoader;..\Vendor\stb_image;..\Vendor\Assimp\include;..\Vendor\Json;..\Vendor\PhysX\include;..\Vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

@@ -1,0 +1,52 @@
+[18:21:31] FileCore: some sussy error
+[18:22:58] FileCore: some sussy error
+[18:24:23] FileCore: some sussy error
+[18:26:19] FileCore: some sussy error
+[18:32:53] FileCore: sus
+[18:35:22] FileCore: sus
+[18:35:22] FileCore: sus
+[18:35:22] FileCore: sus
+[18:35:22] FileCore: sus
+[19:01:28] FileCore: sus
+[19:01:28] FileCore: sus
+[19:01:28] FileCore: sus
+[19:01:28] FileCore: sus
+[19:02:13] FileCore: sus
+[19:02:13] FileCore: sus
+[19:02:13] FileCore: sus
+[19:02:13] FileCore: sus
+[19:03:16] FileCore: sus
+[19:03:16] FileCore: sus
+[19:03:16] FileCore: sus
+[19:03:16] FileCore: sus
+[19:13:42] FileCore: sus
+[19:13:42] FileCore: Loaded Game Framework
+[19:24:46] FileCore: sus
+[19:24:46] FileCore: Loaded Game Framework
+[19:47:28] FileCore: sus
+[19:47:28] FileCore: Loaded Game Framework
+[19:52:41] FileCore: sus
+[19:52:41] FileCore: Loaded Game Framework
+[19:52:49] FileCore: sus
+[19:52:49] FileCore: Loaded Game Framework
+[19:52:53] FileCore: sus
+[19:52:53] FileCore: Loaded Game Framework
+[19:55:11] FileCore: sus
+[19:55:58] FileCore: Loaded Game Framework
+[20:12:57] FileCore: app
+[20:12:57] FileCore: Loaded Game Framework
+[20:15:09] FileCore: app
+[20:15:09] FileCore: Loaded Game Framework
+[20:17:59] FileCore: Started App
+[20:17:59] FileCore: Loaded Game Framework
+[20:18:46] FileCore: Started App
+[20:18:47] FileCore: Loaded Game Framework
+[20:18:47] FileCore: Loaded Project
+[20:24:12] FileCore: Created Random Class
+[20:24:12] FileCore: Started App, random = 0.971042
+[20:24:12] FileCore: Loaded Game Framework, random = 0.814724
+[20:24:12] FileCore: Loaded Project, random = 0.814724
+[20:24:58] FileCore: Created Random Class
+[20:24:58] FileCore: Started App, random = 0.511196
+[20:24:59] FileCore: Loaded Game Framework, random = 0.814724
+[20:24:59] FileCore: Loaded Project, random = 0.814724

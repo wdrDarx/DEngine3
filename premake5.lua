@@ -53,6 +53,7 @@ project "Engine"
 		IncludeDir["STB_IMAGE"],
 		IncludeDir["ASSIMP"],
 		IncludeDir["Json"],
+		IncludeDir["SPD_LOG"],
 		IncludeDir["PhysX"]
 	}
 
@@ -66,7 +67,6 @@ project "Engine"
 		Library["PhysXExtensions"],
 		Library["PhysXFoundation"],
 		Library["PhysXPvd"],
-
 		Library["Assimp"],
 		Library["Zlib"],
 		Library["IRRXLM"],
@@ -134,7 +134,8 @@ project "Editor"
 		IncludeDir["STB_IMAGE"],
 		IncludeDir["ASSIMP"],
 		IncludeDir["Json"],
-		IncludeDir["PhysX"]
+		IncludeDir["PhysX"],
+		IncludeDir["SPD_LOG"]
 	}
 
 	defines
@@ -200,7 +201,8 @@ project "Runtime"
 		IncludeDir["STB_IMAGE"],
 		IncludeDir["ASSIMP"],
 		IncludeDir["Json"],
-		IncludeDir["PhysX"]
+		IncludeDir["PhysX"],
+		IncludeDir["SPD_LOG"]
 	}
 
 	defines
