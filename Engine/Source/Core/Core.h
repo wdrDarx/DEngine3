@@ -155,10 +155,12 @@ struct test_base_template<BaseTemplate, Derived, std::enable_if_t<!std::is_class
 	using is_base = std::false_type;
 };
 
+//Make this class a singleton throughout modules and the application, fetch this singleton with GET_SINGLETON(class)
+//Example : DEFINE_SINGLETON(Log, Get_Log)
 #define DEFINE_SINGLETON(class, Get_class) \
 extern "C" DLL_EXPORT inline class & Get_class() { static class l{}; return l; }
 
-//get macro for fetching 
+//Fetch a singleton from anywhere, defined with DEFINE_SINGLETON(class, Get_class)
 #define GET_SINGLETON(class) [&]() -> class& \
 { std::string name = std::string("Get_") + std::string(#class); class& (*func)() = (class & (*)())GetProcAddress(GetModuleHandle(NULL), name.c_str()); class& cl = func(); return cl; }()
 

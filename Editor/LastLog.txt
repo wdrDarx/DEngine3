@@ -50,3 +50,11 @@
 [20:24:58] FileCore: Started App, random = 0.511196
 [20:24:59] FileCore: Loaded Game Framework, random = 0.814724
 [20:24:59] FileCore: Loaded Project, random = 0.814724
+[20:34:05] FileCore: Created Random Class
+[20:34:05] FileCore: Started App, random = 0.579577
+[20:34:05] FileCore: Loaded Game Framework, random = 0.460886
+[20:34:05] FileCore: Loaded Project, random = 0.855001
+[20:40:51] FileCore: Created Random Class
+[20:40:51] FileCore: Started App, random = 0.842978
+[20:40:51] FileCore: Loaded Game Framework, random = 0.154708
+[20:40:51] FileCore: Loaded Project, random = 0.225680

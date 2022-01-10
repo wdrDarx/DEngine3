@@ -4,61 +4,48 @@
 
 Log::Log()
 {
-	s_isIinit = true;
 	spdlog::set_pattern("%^[%T] %n: %v%$");
-	s_CoreLogger = spdlog::stdout_color_mt("Core");
-	s_CoreLogger->set_level(spdlog::level::trace);
+	m_CoreLogger = spdlog::stdout_color_mt("Core");
+	m_CoreLogger->set_level(spdlog::level::trace);
 
-	s_AppLogger = spdlog::stdout_color_mt("App");
-	s_AppLogger->set_level(spdlog::level::trace);
+	m_AppLogger = spdlog::stdout_color_mt("App");
+	m_AppLogger->set_level(spdlog::level::trace);
 
-	s_FileLogger = spdlog::basic_logger_mt("FileCore", "LastLog.txt");
+	m_FileLogger = spdlog::basic_logger_mt("FileCore", "LastLog.txt");
 
-	s_CoreLogger->info("Initialized Log");
+	m_CoreLogger->info("Initialized Log");
 }
 
-void Log::LogTemp(const std::string& text) const
+void Log::LogTemp(const std::string& text) 
 {
-	s_CoreLogger->trace(text);
-
+	m_CoreLogger->trace(text);
+	m_LogAmount++;
 	if(LOG_FILE)
-		s_FileLogger->trace(text);
+		m_FileLogger->trace(text);
 }
 
-void Log::LogWarn(const std::string& text) const
+void Log::LogWarn(const std::string& text) 
 {
-	s_CoreLogger->warn(text);
+	m_CoreLogger->warn(text);
+	m_LogAmount++;
 
 	if (LOG_FILE)
-		s_FileLogger->warn(text);
+		m_FileLogger->warn(text);
 }
 
-void Log::LogError(const std::string& text) const
+void Log::LogError(const std::string& text) 
 {
-	s_CoreLogger->error(text);
-
+	m_CoreLogger->error(text);
+	m_LogAmount++;
 	if (LOG_FILE)
-		s_FileLogger->error(text);
+		m_FileLogger->error(text);
 }
 
 
-void Log::LogInfo(const std::string& text) const
+void Log::LogInfo(const std::string& text) 
 {
-	s_CoreLogger->info(text);
-
+	m_CoreLogger->info(text);
+	m_LogAmount++;
 	if (LOG_FILE)
-		s_FileLogger->info(text);
-}
-
-std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
-std::shared_ptr<spdlog::logger> Log::s_FileLogger;
-std::shared_ptr<spdlog::logger> Log::s_AppLogger;
-
-
-bool Log::s_isIinit;
-
-ILog& GetSingleton()
-{
-	static Log l;
-	return l;
+		m_FileLogger->info(text);
 }

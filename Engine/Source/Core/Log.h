@@ -6,33 +6,22 @@
 #define LOG_FILE 1
 
 
-class ILog
-{
-public:
-	virtual void LogTemp(const std::string& text) const = 0;
-	virtual void LogWarn(const std::string& text) const = 0;
-	virtual void LogError(const std::string& text) const = 0;
-	virtual void LogInfo(const std::string& text) const = 0;
-};
-
-extern "C" __declspec(dllexport) ILog & GetSingleton();
-
-class Log : public ILog
+class Log 
 {
 	public:
 
 		Log();
 
-		void LogTemp(const std::string& text) const override;
-		void LogWarn(const std::string& text) const override;
-		void LogError(const std::string& text) const override;
-		void LogInfo(const std::string& text) const override;
+		void LogTemp(const std::string& text);
+		void LogWarn(const std::string& text);
+		void LogError(const std::string& text);
+		void LogInfo(const std::string& text);
 
-		static std::shared_ptr<spdlog::logger> s_CoreLogger;
-		static std::shared_ptr<spdlog::logger> s_FileLogger;
-		static std::shared_ptr<spdlog::logger> s_AppLogger;
+		std::shared_ptr<spdlog::logger> m_CoreLogger;
+		std::shared_ptr<spdlog::logger> m_FileLogger;
+		std::shared_ptr<spdlog::logger> m_AppLogger;
 
-		static bool s_isIinit;
+		int m_LogAmount;
 };
 
 DEFINE_SINGLETON(Log, Get_Log);
