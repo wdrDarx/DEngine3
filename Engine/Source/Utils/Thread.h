@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Core.h"
 
-
 //Simple thread system
 class Thread
 {
@@ -32,9 +31,9 @@ public:
 			std::unique_lock<std::mutex> lock(m_Mutex);
 
 			m_Condition.wait(lock, [this]()
-				{
-					return !m_Jobs.empty() && !m_Stop;
-				});
+			{
+				return !m_Jobs.empty() && !m_Stop;
+			});
 
 			m_Job = m_Jobs.front();
 			m_Jobs.erase(m_Jobs.begin());

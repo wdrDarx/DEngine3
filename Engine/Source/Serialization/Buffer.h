@@ -14,7 +14,7 @@ struct BufferWritter
 	void WriteOffset(size_t StartPos, const void* data, size_t size);
 
 	template<typename T>
-	void WriteVec(std::vector<T>& vec)
+	void WriteVec(const std::vector<T>& vec)
 	{
 		//write the size
 		size_t vecSize = vec.size();
@@ -23,7 +23,7 @@ struct BufferWritter
 	}
 
 	template<typename T>
-	void WriteVecElementSize(std::vector<T>& vec, const size_t& elementSize)
+	void WriteVecElementSize(const std::vector<T>& vec, const size_t& elementSize)
 	{
 		//write the size	
 		size_t vecSize = vec.size();
@@ -48,6 +48,7 @@ struct BufferWritter
 	void WriteStringVector(const std::vector<std::string>& vec);
 
 	void WriteString(const std::string& str);
+	void WriteBuffer(const Buffer& buffer);
 
 	//in bytes
 	size_t m_CurrentOffset = 0;
@@ -116,6 +117,7 @@ struct BufferReader
 	void ReadStringVector(std::vector<std::string>& vec);
 
 	void ReadString(std::string& str);
+	void ReadBuffer(Buffer& buffer);
 
 	//in bytes
 	size_t m_CurrentOffset = 0;

@@ -25,6 +25,11 @@ void BufferWritter::WriteString(const std::string& str)
 	WriteVec(charVec);
 }
 
+void BufferWritter::WriteBuffer(const Buffer& buffer)
+{
+	WriteVec(buffer);
+}
+
 void BufferReader::Read(void* data, size_t size)
 {
 	ReadOffset(m_CurrentOffset, data, size);
@@ -46,4 +51,9 @@ void BufferReader::ReadString(std::string& str)
 	std::vector<char> charVec;
 	ReadVec(charVec);
 	str = std::string(charVec.begin(), charVec.end());
+}
+
+void BufferReader::ReadBuffer(Buffer& buffer)
+{
+	ReadVec(buffer);
 }

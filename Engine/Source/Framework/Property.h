@@ -9,6 +9,14 @@
 if(typeid(member) == typeid(float)) { out = new FloatProperty(member); } \
  return out; }()
 
+//e.g  PROP_CLASS_DEF(FloatProperty, float)
+#define PROP_CLASS_DEF(class, WrappingTypename) \
+using Typename = WrappingTypename; \
+using ThisClass = class; \
+void AllocateValue(void*& ptr) override { ptr = new WrappingTypename; } \
+ThisClass(const std::string& name, Typename& value) : Property(ClassType(typeid(Typename))) { m_Value = &value;	SetName(name); } \
+ThisClass() : Property(ClassType(typeid(Typename))) { };
+
 
 //pointer to existing value 
 struct Property
@@ -28,17 +36,45 @@ public:
 	//entire property
 	Buffer MakeBuffer() const
 	{
-		return Buffer{};
+		Buffer out;
+		BufferWritter writter(out);
+		writter.WriteString(m_Name);
+		writter.WriteString(m_Type.Name); //typename of this property
+		writter.WriteString(m_Metadata);
+		writter.Write(&m_Flags, sizeof(int));
+		writter.WriteVec(MakeValueBuffer()); // serialized value
 	}
 
 	void FromBuffer(const Buffer& buffer)
+	{
+		BufferReader reader(buffer);
+		reader.ReadString(m_Name);
+		reader.ReadString(m_Type.Name); //typename of this property
+		reader.ReadString(m_Metadata);
+		reader.Read(&m_Flags, sizeof(int));
+		Buffer buf;
+		reader.ReadBuffer(buf); // read the serialized value
+
+		//set the value from the read buffer
+		ValueFromBuffer(buf);
+	}
+
+	//must be overriden (e.g ptr = new float(); )
+	virtual void AllocateValue(void*& ptr)
 	{
 
 	}
 
 	//for m_value only
-	virtual Buffer MakeValueBuffer() const = 0;
-	virtual void ValueFromBuffer(const Buffer& buffer) = 0;
+	virtual Buffer MakeValueBuffer() const
+	{
+		return Buffer();
+	}
+
+	virtual void ValueFromBuffer(const Buffer& buffer)
+	{
+
+	}
 
 	std::string GetName() const
 	{
@@ -89,15 +125,31 @@ struct StaticProperty
 		m_Flags = prop.m_Flags;
 	}
 
-	void* GetRawValue()
+	template<class T>
+	static StaticProperty Make(const T& SourceProp)
 	{
-		if (!m_LastRawValue)
-			delete m_LastRawValue;
-
-		return nullptr;
+		StaticProperty out;
+		out.FromProperty(SourceProp);
+		return out;
 	}
 
-	void* m_LastRawValue;
+	void* GetRawValue() const
+	{
+		PropertyRegistery& registry = GET_SINGLETON(PropertyRegistery);
+		for (auto& reg : registry.GetRegisteredKeys())
+		{
+			Property* prop = registry.Make(reg);
+			if (prop->m_Type.Name == m_Type.Name)
+			{
+				//allocate the value of the prop
+				prop->AllocateValue(prop->m_Value);
+				prop->ValueFromBuffer(m_Data);
+				return prop->m_Value;
+			}
+		}
+	}
+
+	void* m_LastRawValue = nullptr;
 	Buffer m_Data;
 	ClassType m_Type;
 	std::string m_Name;
@@ -109,17 +161,7 @@ struct StaticProperty
 struct FloatProperty : public Property, AutoRegister<FloatProperty, Engine>
 {
 	AUTO_REGISTER()
-
-	FloatProperty(const std::string& name, float& value) : Property(ClassType(typeid(float)))
-	{
-		m_Value = &value;
-		SetName(name);
-	}
-
-	FloatProperty() : Property(ClassType(typeid(float)))
-	{
-
-	}
+	PROP_CLASS_DEF(FloatProperty, float)
 
 	Buffer MakeValueBuffer() const override
 	{
@@ -136,13 +178,10 @@ struct FloatProperty : public Property, AutoRegister<FloatProperty, Engine>
 	}
 };
 
-struct StringProperty : public Property
+struct StringProperty : public Property, AutoRegister<StringProperty, Engine>
 {
-	StringProperty(const std::string& name, std::string& value) : Property(ClassType(typeid(std::string)))
-	{
-		m_Value = &value;
-		SetName(name);
-	}
+	AUTO_REGISTER()
+	PROP_CLASS_DEF(StringProperty, std::string)
 
 	Buffer MakeValueBuffer() const override
 	{
@@ -167,6 +206,11 @@ struct PropArgDef
 
 	}
 
+	PropArgDef(const std::string& name, const std::type_index& type) : Name(name), Type(type)
+	{
+
+	}
+
 	std::string Name;
 	std::type_index Type;
 };
@@ -176,7 +220,7 @@ struct PropArray
 	template<typename T>
 	const T& Get(size_t index) const
 	{
-		void* value = m_Props[index].m_Data.data();
+		void* value = m_Props[i].GetRawValue();
 		return *(T*)value;
 	}
 
@@ -185,11 +229,11 @@ struct PropArray
 	{
 		void* value = nullptr;
 
-		for (int i = 0; i < m_Props.size(); i++)
+		for (uint i = 0; i < m_Props.size(); i++)
 		{
 			if (m_Props[i].m_Name == name)
 			{
-				value = (void*)m_Props[i].m_Data.data();
+				value = m_Props[i].GetRawValue();
 				break;
 			}
 		}
