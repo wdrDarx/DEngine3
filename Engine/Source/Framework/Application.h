@@ -7,7 +7,6 @@
 #include "Framework/ModuleManager.h"
 #include "Framework/Registry.h"
 
-
 enum class AppState
 {
 	GAME = 1,
@@ -20,9 +19,8 @@ enum class AppType
 	SHIPPING = 2
 };
 
-
 /*
-Application contains a window and houses application objects
+ Application is a singleton contains windows and houses application objects
 */
 class Engine;
 class DENGINE_API Application
@@ -44,7 +42,8 @@ public:
 		m_AppState = state;
 	}
 
-	/*Creates an appobject with an assigned pointer to this app and a random id, then adds it to app object list here
+	/*
+		Creates an appobject with an assigned pointer to this app and a random id, then adds it to app object list here
 		WARNING : does not work when called from a module, the created app object must also be associated with a module before being created
 	*/
 	template<class T>
@@ -141,16 +140,6 @@ public:
 		return m_AppObjects;
 	}
 
-	ObjectRegistry& GetObjectRegistry()
-	{
-		return m_ObjectRegistry;
-	}
-
-	StructRegistry& GetStructRegistry()
-	{
-		return m_StructRegistry;
-	}
-
 	ModuleManager& GetModuleManager()
 	{
 		return m_ModuleManager;
@@ -168,17 +157,11 @@ public:
 	
 protected:
 	void CoreUpdate(float DeltaTime);
-	void RegisterBaseClasses();
-	void RegisterBaseAssetTypes();
 	void Shutdown();
 
 	AppState m_AppState;
 	AppType m_AppType;
-
 	std::vector<Ref<AppObject>> m_AppObjects;
-
-	ObjectRegistry m_ObjectRegistry;
-	StructRegistry m_StructRegistry;
 	ModuleManager m_ModuleManager;
 	Tick m_LastTick;
 };

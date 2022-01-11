@@ -25,12 +25,6 @@ void ObjectBase::Initialize(const ObjectInitializer& initializer)
 		m_ID = { Rand().Int64() };
 	}
 
-	//start invalid
-	if (initializer.Flags & ConstructFlags::INVALIDATE)
-	{
-		m_IsValid = false;
-	}
-
 	//Define Properties
 	if ((initializer.Flags & ConstructFlags::NOPROPS) == 0) //if the flag is not set
 		DefineProperties();
@@ -44,26 +38,63 @@ void ObjectBase::Initialize(const ObjectInitializer& initializer)
 		OnPostConstruct();
 }
 
-uint ObjectBase::Serialize(Buffer& buffer) const
+size_t ObjectBase::Serialize(Buffer& buffer) const
 {
-	return 0;
+	BufferWritter writter(buffer, 0);
+	writter.Write(&GetID(), sizeof(UID));
+	writter.WriteString(GetName());
+	writter.Write(&GetObjectFlags(), sizeof(ObjectFlags));
+	writter.WriteBuffer(GeneratePropBuffer());
+
+	return writter.GetCurrentOffset();
 }
 
-uint ObjectBase::Deserialize(const Buffer& buffer)
+size_t ObjectBase::Deserialize(const Buffer& buffer)
 {
-	return 0;
+	BufferReader reader(buffer, 0);
+	reader.Read(&m_ID, sizeof(UID));
+	reader.ReadString(m_Name);
+	reader.Read(&m_ObjectFlags, sizeof(ObjectFlags));
+
+	Buffer PropBuffer;
+	reader.ReadBuffer(PropBuffer);
+	LoadPropsFromBuffer(PropBuffer);
+
+	return reader.GetCurrentOffset();
 }
 
 Buffer ObjectBase::GeneratePropBuffer() const
 {
-	return Buffer{};
+	BufferArray PropsArray;
+
+	for (auto& prop : GetProperties())
+	{
+		PropsArray.AddPiece(prop->MakeBuffer());
+	}
+
+	return PropsArray.MakeBuffer();
 }
 
 void ObjectBase::LoadPropsFromBuffer(const Buffer& buffer)
 {
-	
-}
+	BufferArray PropsArray(buffer);
 
+	for (auto& piece : PropsArray.GetDataPieces())
+	{
+		Property prop;
+		prop.LoadAllMetadata(buffer); //only need to load the metadata for checking
+
+		for (auto& p : GetProperties()) //search all current props for corresponding name and type
+		{	
+			if (p->GetName() == prop.GetName() && p->GetType() == prop.GetType()) 
+			{
+				//Found the matching prop, now deserialize it 
+				p->FromBuffer(piece);
+				break;
+			}
+		}
+	}
+}
 
 ObjectInitializer ObjectInitializer::Module(ObjectBase* ExistantModuleObject)
 {

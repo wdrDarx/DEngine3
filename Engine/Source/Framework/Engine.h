@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Misc/Singleton.h"
 
 class Application;
 class DENGINE_API Engine
@@ -13,6 +14,11 @@ public:
 	//flags for shutdown
 	void Stop();
 
+	std::vector<Ref<Application>> GetApplications() const
+	{
+		return m_Applications;
+	}
+
 private:
 	void Update();
 	std::vector<Ref<Application>> m_Applications;
@@ -20,4 +26,6 @@ private:
 	float m_DeltaTime;
 	bool m_MarkShutdown = false;
 };
+
+DEFINE_SINGLETON(Engine, Get_Engine);
 

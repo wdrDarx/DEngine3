@@ -148,6 +148,8 @@
     <ClInclude Include="Source\DEngine.h" />
     <ClInclude Include="Source\Framework\Application.h" />
     <ClInclude Include="Source\Framework\AppObject.h" />
+    <ClInclude Include="Source\Framework\Classes\Properties\PropertyClasses.h" />
+    <ClInclude Include="Source\Framework\ClassType.h" />
     <ClInclude Include="Source\Framework\Engine.h" />
     <ClInclude Include="Source\Framework\FrameworkMacros.h" />
     <ClInclude Include="Source\Framework\Module.h" />
@@ -159,6 +161,7 @@
     <ClInclude Include="Source\Misc\Singleton.h" />
     <ClInclude Include="Source\Serialization\Buffer.h" />
     <ClInclude Include="Source\Utils\FileSystem.h" />
+    <ClInclude Include="Source\Utils\ModuleUtils.h" />
     <ClInclude Include="Source\Utils\Rand.h" />
     <ClInclude Include="Source\Utils\Thread.h" />
     <ClInclude Include="Source\Utils\Timer.h" />

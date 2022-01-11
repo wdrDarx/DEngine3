@@ -1,13 +1,26 @@
 #pragma once
 #include "Core/Core.h"
+#include "Framework/ClassType.h"
 
 using Buffer = std::vector<byte>;
+
+
 
 struct BufferWritter
 {
 	BufferWritter(Buffer& buffer) : m_TargetBuffer(buffer)
 	{
 
+	}
+
+	BufferWritter(Buffer& buffer, const size_t& startingOffset) : m_TargetBuffer(buffer), m_CurrentOffset(startingOffset)
+	{
+
+	}
+
+	size_t GetCurrentOffset() const
+	{
+		return m_CurrentOffset;
 	}
 
 	void Write(const void* data, size_t size);
@@ -49,6 +62,7 @@ struct BufferWritter
 
 	void WriteString(const std::string& str);
 	void WriteBuffer(const Buffer& buffer);
+	void WriteClassType(const ClassType& type);
 
 	//in bytes
 	size_t m_CurrentOffset = 0;
@@ -61,6 +75,16 @@ struct BufferReader
 	BufferReader(const Buffer& buffer) : m_TargetBuffer(buffer)
 	{
 
+	}
+
+	BufferReader(const Buffer& buffer, const size_t& startingOffset) : m_TargetBuffer(buffer), m_CurrentOffset(startingOffset)
+	{
+
+	}
+
+	size_t GetCurrentOffset() const
+	{
+		return m_CurrentOffset;
 	}
 
 	void Read(void* data, size_t size);
@@ -119,9 +143,93 @@ struct BufferReader
 	void ReadString(std::string& str);
 	void ReadBuffer(Buffer& buffer);
 
+	//Also calls for a name update inside the class type
+	void ReadClassType(ClassType& type);
+
 	//in bytes
 	size_t m_CurrentOffset = 0;
 	const Buffer& m_TargetBuffer;
+};
+
+
+
+//array of buffers
+struct DENGINE_API BufferArray
+{
+	std::vector<Buffer> m_DataPieces;
+
+	const std::vector<Buffer>& GetDataPieces() const
+	{
+		return m_DataPieces;
+	}
+
+	void AddPiece(const Buffer& piece)
+	{
+		m_DataPieces.push_back(piece);
+	}
+
+	//Construct this BufferArray from a buffer (buffer that was generated with BufferArray::MakeBuffer())
+	void FromBuffer(const Buffer& buffer);
+
+	BufferArray(const Buffer& buffer)
+	{
+		FromBuffer(buffer);
+	}
+
+	BufferArray()
+	{
+
+	}
+
+	//make a buffer from all the current data pieces
+	Buffer MakeBuffer();
+};
+
+
+//map of buffers String corresponds to a buffer
+struct DENGINE_API BufferMap
+{
+	std::unordered_map<std::string, Buffer> m_DataPieces;
+
+	BufferMap(const Buffer& input)
+	{
+		FromBuffer(input);
+	}
+
+	BufferMap()
+	{
+
+	}
+
+	const std::unordered_map<std::string, Buffer>& GetDataPieces() const
+	{
+		return m_DataPieces;
+	}
+
+	void AddPiece(const std::string& key, const Buffer& piece)
+	{
+		m_DataPieces[key] = piece;
+	}
+
+	bool HasKey(const std::string& key)
+	{
+		return (m_DataPieces.count(key));
+	}
+
+	//write to the map with a lambda 
+	void QuickWrite(const std::string& key, std::function<void(BufferWritter& writter)> WriteFunc);
+	//read from the map with a lambda 
+	void QuickRead(const std::string& key, std::function<void(BufferReader& reader)> ReadFunc);
+
+
+	Buffer& operator[](const std::string& key)
+	{
+		return m_DataPieces[key];
+	}
+
+	void FromBuffer(const Buffer& buffer);
+
+	Buffer MakeBuffer();
 };
 
 

@@ -2,6 +2,7 @@
 #include "Serialization/Buffer.h"
 #include "Framework/Engine.h"
 #include "Framework/Registry.h"
+#include "Framework/ClassType.h"
 #include "Misc/Singleton.h"
 #include "Core/Core.h"
 
@@ -13,10 +14,9 @@ if(typeid(member) == typeid(float)) { out = new FloatProperty(member); } \
 #define PROP_CLASS_DEF(class, WrappingTypename) \
 using Typename = WrappingTypename; \
 using ThisClass = class; \
-void AllocateValue(void*& ptr) override { ptr = new WrappingTypename; } \
+void AllocateValue(void*& ptr) const override { ptr = new WrappingTypename; } \
 ThisClass(const std::string& name, Typename& value) : Property(ClassType(typeid(Typename))) { m_Value = &value;	SetName(name); } \
 ThisClass() : Property(ClassType(typeid(Typename))) { };
-
 
 //pointer to existing value 
 struct Property
@@ -28,50 +28,38 @@ public:
 
 	}
 
+	Property() : m_Type(ClassType(typeid(void)))
+	{
+
+	}
+
 	virtual ~Property()
 	{
 
 	}
 
 	//entire property
-	Buffer MakeBuffer() const
-	{
-		Buffer out;
-		BufferWritter writter(out);
-		writter.WriteString(m_Name);
-		writter.WriteString(m_Type.Name); //typename of this property
-		writter.WriteString(m_Metadata);
-		writter.Write(&m_Flags, sizeof(int));
-		writter.WriteVec(MakeValueBuffer()); // serialized value
-	}
+	Buffer MakeBuffer() const;
 
-	void FromBuffer(const Buffer& buffer)
-	{
-		BufferReader reader(buffer);
-		reader.ReadString(m_Name);
-		reader.ReadString(m_Type.Name); //typename of this property
-		reader.ReadString(m_Metadata);
-		reader.Read(&m_Flags, sizeof(int));
-		Buffer buf;
-		reader.ReadBuffer(buf); // read the serialized value
+	void FromBuffer(const Buffer& buffer);
 
-		//set the value from the read buffer
-		ValueFromBuffer(buf);
-	}
+	//only loads metadata from a buffer, ignoring the value deserialization process 
+	void LoadAllMetadata(const Buffer& buffer);
 
-	//must be overriden (e.g ptr = new float(); )
-	virtual void AllocateValue(void*& ptr)
+	//Allocated a pointer with the correct type e.g StringProperty will allocate a std::string*
+	virtual void AllocateValue(void*& ptr) const
 	{
 
 	}
 
-	//for m_value only
-	virtual Buffer MakeValueBuffer() const
+	//Creates a buffer from a value ptr, pointer type must match property type
+	virtual Buffer MakeValueBuffer(const void* ValuePtr) const
 	{
 		return Buffer();
 	}
 
-	virtual void ValueFromBuffer(const Buffer& buffer)
+	//Deserializes a buffer from a value ptr, pointer type must match property type
+	virtual void ValueFromBuffer(void* TargetValuePtr, const Buffer& buffer) const
 	{
 
 	}
@@ -96,6 +84,22 @@ public:
 		m_Metadata = meta;
 	}
 
+	const void* GetValue() const
+	{
+		return m_Value;
+	}
+
+	//the type points to an actual C type e.g float
+	const ClassType& GetType() const
+	{
+		return m_Type;
+	}
+
+	int GetFlags() const
+	{
+		return m_Flags;
+	}
+
 	ClassType m_Type;
 	std::string m_Name;
 	std::string m_Metadata;
@@ -103,6 +107,7 @@ public:
 	void* m_Value = nullptr;
 };
 
+//Unlike a normal property, a static property just stores the value inside itself within a buffer. It knows its type however to get the raw value of the buffer it needs to find the correct function to deserialize it
 struct StaticProperty
 {
 
@@ -113,18 +118,14 @@ struct StaticProperty
 
 	~StaticProperty()
 	{
-		delete m_LastRawValue;
+		
 	}
+	
+	
+	void FromProperty(const Property& prop);
 
-	void FromProperty(const Property& prop)
-	{
-		m_Data = prop.MakeValueBuffer();
-		m_Type = prop.m_Type;
-		m_Name = prop.GetName();
-		m_Metadata = prop.GetMetadata();
-		m_Flags = prop.m_Flags;
-	}
-
+	//quick function to make a static property from a custom property class 
+	//e.g Make(StringProperty("Name"), &MyString)
 	template<class T>
 	static StaticProperty Make(const T& SourceProp)
 	{
@@ -133,69 +134,36 @@ struct StaticProperty
 		return out;
 	}
 
-	void* GetRawValue() const
+	template<typename T>
+	static StaticProperty Make(const std::string& name, const T& value)
 	{
+		StaticProperty out;
+		out.m_Name = name;
+		out.m_Type = ClassType(typeid(value));
 		PropertyRegistery& registry = GET_SINGLETON(PropertyRegistery);
-		for (auto& reg : registry.GetRegisteredKeys())
+		for (auto& key : registry.GetRegisteredKeys())
 		{
-			Property* prop = registry.Make(reg);
-			if (prop->m_Type.Name == m_Type.Name)
+			Property* prop = registry.Make(key);
+			if (prop->GetType().typeIndex == typeid(T))
 			{
-				//allocate the value of the prop
-				prop->AllocateValue(prop->m_Value);
-				prop->ValueFromBuffer(m_Data);
-				return prop->m_Value;
+				out.m_Data = prop->MakeValueBuffer(&value);
+				delete prop; //property class has done its job
+				return out;
 			}
 		}
+
+		return out;
 	}
 
-	void* m_LastRawValue = nullptr;
+	//Gets pointer to raw value of this property by correctly deserializing the value, this pointer can be casted to the desired type
+	void* GetRawValue() const;
+
+
 	Buffer m_Data;
 	ClassType m_Type;
 	std::string m_Name;
 	std::string m_Metadata;
 	int m_Flags;
-};
-
-
-struct FloatProperty : public Property, AutoRegister<FloatProperty, Engine>
-{
-	AUTO_REGISTER()
-	PROP_CLASS_DEF(FloatProperty, float)
-
-	Buffer MakeValueBuffer() const override
-	{
-		Buffer out;
-		BufferWritter writter(out);
-		writter.Write(m_Value, sizeof(float));
-		return out;
-	}
-
-	void ValueFromBuffer(const Buffer& buffer) override
-	{
-		BufferReader reader(buffer);
-		reader.Read(m_Value, sizeof(float));
-	}
-};
-
-struct StringProperty : public Property, AutoRegister<StringProperty, Engine>
-{
-	AUTO_REGISTER()
-	PROP_CLASS_DEF(StringProperty, std::string)
-
-	Buffer MakeValueBuffer() const override
-	{
-		Buffer out;
-		BufferWritter writter(out);
-		writter.WriteString(*(std::string*)m_Value);
-		return out;
-	}
-
-	void ValueFromBuffer(const Buffer& buffer) override
-	{
-		BufferReader reader(buffer);
-		reader.ReadString(*(std::string*)m_Value);
-	}
 };
 
 

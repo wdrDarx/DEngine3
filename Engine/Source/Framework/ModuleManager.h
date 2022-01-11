@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "json/json.h"
+#include "Misc/Singleton.h"
 
 class Module;
 typedef Module* (*CreateModuleFunc)();

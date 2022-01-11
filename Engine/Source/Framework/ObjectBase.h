@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Framework/Tick.h"
 #include "Serialization/Buffer.h"
+#include "Framework/Property.h"
 
 enum ConstructFlags
 {
@@ -79,12 +80,12 @@ struct ObjectInitializer
 class DENGINE_API _placeholder
 {
 protected:
-	virtual uint Serialize(Buffer& buffer)
+	virtual size_t Serialize(Buffer& buffer)
 	{
 		return 0;
 	}
 
-	virtual uint Deserialize(const Buffer& buffer)
+	virtual size_t Deserialize(const Buffer& buffer)
 	{
 		return 0;
 	}
@@ -165,16 +166,6 @@ public:
 		
 	}
 
-	bool IsValid() const
-	{
-		return m_IsValid;
-	}
-
-	void Invalidate()
-	{
-		m_IsValid = false;
-	}
-
 	const UID& GetID() const
 	{
 		return m_ID;
@@ -201,10 +192,12 @@ public:
 	}
 
 	//automatically serializes props, can be customized and overriden
-	virtual uint Serialize(Buffer& buffer) const;
+	//return value is the final offet of the buffer (use this offset for chain serialization)
+	virtual size_t Serialize(Buffer& buffer) const;
 
 	//automatically Deserializes props, can be customized and overriden
-	virtual uint Deserialize(const Buffer& buffer);
+	//return value is the final offet of the buffer (use this offset for chain serialization)
+	virtual size_t Deserialize(const Buffer& buffer);
 
 	//Saves all current properties as a buffer array outputed as a single buffer
 	Buffer GeneratePropBuffer() const;
@@ -212,15 +205,6 @@ public:
 	//Loads all found props in a buffer 
 	void LoadPropsFromBuffer(const Buffer& buffer);
 
-	void MarkDelete()
-	{
-		m_MarkDelete = true;
-	}
-
-	bool IsMarkedForDeletion() const
-	{
-		return m_MarkDelete;
-	}
 
 	const ObjectInitializer& GetObjectInitializer() const
 	{
@@ -255,20 +239,20 @@ public:
 		return m_ObjectFlags;
 	}
 
+	const std::vector<Property*>& GetProperties() const
+	{
+		return m_Properties;
+	}
+
 protected:
 
-	
+	//Array of properties that point to members of this class
+	std::vector<Property*> m_Properties;
 
 private:
 
-	//used for invalidating objects for events and such
-	bool m_IsValid = true;
-
 	//Misc flags
 	ObjectFlags m_ObjectFlags;
-
-	//flag used for deleting this object next tick or something
-	bool m_MarkDelete = false;
 
 	//set true after initialize is called (needed for checking things like is this a static class or an actual object?)
 	bool m_Initialized = false;

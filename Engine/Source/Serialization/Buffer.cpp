@@ -30,6 +30,11 @@ void BufferWritter::WriteBuffer(const Buffer& buffer)
 	WriteVec(buffer);
 }
 
+void BufferWritter::WriteClassType(const ClassType& type)
+{
+	Write(&type.typeIndex, sizeof(std::type_index));
+}
+
 void BufferReader::Read(void* data, size_t size)
 {
 	ReadOffset(m_CurrentOffset, data, size);
@@ -56,4 +61,92 @@ void BufferReader::ReadString(std::string& str)
 void BufferReader::ReadBuffer(Buffer& buffer)
 {
 	ReadVec(buffer);
+}
+
+void BufferReader::ReadClassType(ClassType& type)
+{
+	Read(&type.typeIndex, sizeof(std::type_index));
+	type.Name = type.GetFriendlyTypeName(type.typeIndex); //update the name
+}
+
+void BufferArray::FromBuffer(const Buffer& buffer)
+{
+	uint size = 0;
+	uint offset = 0;
+	while (offset < buffer.size())
+	{
+		memcpy(&size, buffer.data() + offset, sizeof(uint));
+		offset += sizeof(uint);
+
+		Buffer piece(size);
+		memcpy(piece.data(), buffer.data() + offset, size);
+		offset += size;
+		AddPiece(piece);
+	}
+}
+
+Buffer BufferArray::MakeBuffer()
+{
+	Buffer buffer;
+
+	for (auto& piece : m_DataPieces)
+	{
+		uint size = (uint)piece.size();
+		buffer.resize(buffer.size() + sizeof(uint));
+		memcpy(buffer.data() + buffer.size() - sizeof(uint), &size, sizeof(uint));
+
+		buffer.insert(buffer.end(), piece.begin(), piece.end());
+	}
+
+	return buffer;
+}
+
+void BufferMap::QuickWrite(const std::string& key, std::function<void(BufferWritter& writter)> WriteFunc)
+{
+	Buffer buffer;
+	BufferWritter writter(buffer);
+	WriteFunc(writter);
+	AddPiece(key, buffer);
+}
+
+void BufferMap::QuickRead(const std::string& key, std::function<void(BufferReader& reader)> ReadFunc)
+{
+	const Buffer& buffer = m_DataPieces[key];
+	BufferReader reader(buffer);
+	ReadFunc(reader);
+}
+
+void BufferMap::FromBuffer(const Buffer& buffer)
+{
+	BufferArray PieceBuffer;
+	PieceBuffer.FromBuffer(buffer);
+
+	for (const auto& piece : PieceBuffer.GetDataPieces())
+	{
+		std::string Key;
+		Buffer Data;
+
+		BufferReader reader(piece);
+		reader.ReadString(Key);
+		reader.ReadBuffer(Data);
+
+		AddPiece(Key, Data);
+	}
+}
+
+Buffer BufferMap::MakeBuffer()
+{
+	BufferArray PieceBuffer;
+	for (auto& piece : m_DataPieces)
+	{
+		Buffer BufferPiece;
+
+		BufferWritter writter(BufferPiece);
+		writter.WriteString(piece.first);
+		writter.WriteBuffer(piece.second);
+
+		PieceBuffer.AddPiece(BufferPiece);
+	}
+
+	return PieceBuffer.MakeBuffer();
 }

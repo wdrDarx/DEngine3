@@ -2,16 +2,9 @@
 #include "Application.h"
 #include "DEngine.h"
 
-
 Application::Application() : m_ModuleManager(ToRef<Application>(this)) //initialize module manager
 {
-	GetObjectRegistry().m_App = ToRef<Application>(this);
-	GetStructRegistry().m_App = ToRef<Application>(this);
 
-	RegisterBaseClasses();
-	RegisterBaseAssetTypes();
-
-	
 }
 
 void Application::OnUpdate(const Tick& tick)
@@ -37,21 +30,6 @@ void Application::CoreUpdate(float DeltaTime)
 	OnUpdate(tick);
 }
 
-void Application::RegisterBaseClasses()
-{
-	//Base
-//  	REGISTER_OBJECT(GetObjectRegistry(), ObjectBase, Engine);
-//  	REGISTER_OBJECT(GetObjectRegistry(), AppObject, Engine);
-//  	REGISTER_OBJECT(GetObjectRegistry(), Scene, Engine);
-// 	REGISTER_OBJECT(GetObjectRegistry(), SceneObject, Engine);
-
-	
-}
-
-void Application::RegisterBaseAssetTypes()
-{
-	
-}
 
 void Application::Shutdown()
 {

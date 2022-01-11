@@ -2,8 +2,10 @@
 #include "Core/Core.h"
 #include "ModuleManager.h"
 
+
 #define EXTERN extern "C"
 #define MODULEDEF(name) Module* CreateModule() { return new name(#name); };
+
 
 struct Dependency
 {
@@ -111,6 +113,11 @@ public:
 	void SetMetadata(const ModuleMetadata& metadata)
 	{
 		m_MetaData = metadata;
+	}
+
+	const HINSTANCE& GetInstance() const
+	{
+		return m_Instance;
 	}
 
 	std::string m_Name;

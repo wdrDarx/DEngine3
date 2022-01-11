@@ -13,16 +13,9 @@ void GameFramework::OnLoad()
 	LOG_INFO("Loaded Game Framework");
 	Property* prop = GET_SINGLETON(PropertyRegistery).Make({"FloatProperty", "Engine"});
 
-	Method method;
-	method.m_Function = std::bind(&GameFramework::TestMethod, this, std::placeholders::_1);
-	method.m_Arguments = { PropArgDef("Name", typeid(std::string)) };
-
-	std::string NameStr = "Dababy";
-	float age = 100;
-	PropArray args;
-	args.m_Props.push_back(StaticProperty::Make(StringProperty("Name", NameStr)));
-	args.m_Props.push_back(StaticProperty::Make(FloatProperty("Age", age)));
-	method.Call(args);
+	StaticProperty myStaticProp = StaticProperty::Make<int>("SusTEst", 69);
+	LOG_INFO(myStaticProp.m_Name + STRING(*(int*)myStaticProp.GetRawValue()));
+	LOG_WARN("This Module Name : " + std::string(GetCurrentModuleName()));
 }
 
 void GameFramework::TestMethod(const PropArray& args)

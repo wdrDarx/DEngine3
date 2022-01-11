@@ -3,11 +3,12 @@
 
 int main()
 {
+	Engine& engine = GET_SINGLETON(Engine);
 	Ref<Application> app = MakeRef<Application>();
-	ModuleManager manager(app);
-
-	manager.LoadAllModules("G:\\DEngine3\\bin\\Debug-windows-x86_64\\Editor\\Modules\\");
-
+	engine.AddApplication(app);
+	app->GetModuleManager().LoadAllModules("G:\\DEngine3\\bin\\Debug-windows-x86_64\\Editor\\Modules\\");
+	LOG_WARN("This Module Name : " + std::string(GetCurrentModuleName()));
+	engine.Start();
 	
 
 	return 0;
