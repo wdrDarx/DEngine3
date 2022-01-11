@@ -1,29 +1,3 @@
-// Copyright(c) 2015-present, Gabi Melman & spdlog contributors.
-// Distributed under the MIT License (http://opensource.org/licenses/MIT)
-
-#pragma once
-
-#include <spdlog/common.h>
-#include <unordered_map>
-
-namespace spdlog {
-namespace cfg {
-namespace helpers {
-//
-// Init levels from given string
-//
-// Examples:
-//
-// set global level to debug: "debug"
-// turn off all logging except for logger1: "off,logger1=debug"
-// turn off all logging except for logger1 and logger2: "off,logger1=debug,logger2=info"
-//
-SPDLOG_API void load_levels(const std::string &txt);
-} // namespace helpers
-
-} // namespace cfg
-} // namespace spdlog
-
-#ifdef SPDLOG_HEADER_ONLY
-#    include "helpers-inl.h"
-#endif // SPDLOG_HEADER_ONLY
+version https://git-lfs.github.com/spec/v1
+oid sha256:efa9c281f8e526b11d7b3d0f88c797cc13b9f0656f66dc6e14e0ec9391b30971
+size 714

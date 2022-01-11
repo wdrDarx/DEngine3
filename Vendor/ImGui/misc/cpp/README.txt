@@ -1,10 +1,3 @@
-
-imgui_stdlib.h + imgui_stdlib.cpp
-  InputText() wrappers for C++ standard library (STL) type: std::string.
-  This is also an example of how you may wrap your own similar types.
-
-imgui_scoped.h
-  [Experimental, not currently in main repository]
-  Additional header file with some RAII-style wrappers for common Dear ImGui functions.
-  Try by merging: https://github.com/ocornut/imgui/pull/2197
-  Discuss at: https://github.com/ocornut/imgui/issues/2096
+version https://git-lfs.github.com/spec/v1
+oid sha256:b1fc1c3b0ad7f90f4e3630086f4b53f98cccd31d5d0844adc88f825fba48deb0
+size 453

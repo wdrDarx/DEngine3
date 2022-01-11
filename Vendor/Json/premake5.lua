@@ -1,30 +1,3 @@
-project "Json"
-	kind "StaticLib"
-	language "C++"
-    staticruntime "off"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	includedirs
-	{
-		"../%{prj.name}/"
-	}
-
-	files
-	{
-		"**.h",
-		"**.cpp"
-	}
-
-	filter "system:windows"
-		systemversion "latest"
-		cppdialect "C++17"
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "Speed"
+version https://git-lfs.github.com/spec/v1
+oid sha256:ea4f2e5abefab27652beab15a601d2f9aa126abc314476016f5cfee697efffef
+size 492

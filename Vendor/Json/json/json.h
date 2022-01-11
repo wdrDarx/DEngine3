@@ -1,15 +1,3 @@
-// Copyright 2007-2010 Baptiste Lepilleur and The JsonCpp Authors
-// Distributed under MIT license, or public domain if desired and
-// recognized in your jurisdiction.
-// See file LICENSE for detail or copy at http://jsoncpp.sourceforge.net/LICENSE
-
-#ifndef JSON_JSON_H_INCLUDED
-#define JSON_JSON_H_INCLUDED
-
-#include "config.h"
-#include "json_features.h"
-#include "reader.h"
-#include "value.h"
-#include "writer.h"
-
-#endif // JSON_JSON_H_INCLUDED
+version https://git-lfs.github.com/spec/v1
+oid sha256:05ccb35afa55a068f8cc2a195db46d89a7f6a458d1943ae009465834c6404a67
+size 447

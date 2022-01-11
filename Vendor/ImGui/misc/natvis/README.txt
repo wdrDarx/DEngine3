@@ -1,4 +1,3 @@
-
-Natvis file to describe dear imgui types in the Visual Studio debugger.
-With this, types like ImVector<> will be displayed nicely in the debugger.
-You can include this file a Visual Studio project file, or install it in Visual Studio folder.
+version https://git-lfs.github.com/spec/v1
+oid sha256:b6731286e02909311db1623eefb8866f2797fa2ed57ec18dfcfd0bd01712b98f
+size 243

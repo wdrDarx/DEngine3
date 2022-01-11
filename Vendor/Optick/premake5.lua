@@ -1,30 +1,3 @@
-project "Optick"
-	kind "StaticLib"
-	language "C"
-	staticruntime "off"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"include/*.*",
-		"src/*.*"
-	}
-
-	defines
-	{
-		"OPTICK_ENABLE_GPU_VULKAN=0"
-	}
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "Speed"
-
-	filter "configurations:Runtime"
-		runtime "Release"
-		optimize "Speed"
+version https://git-lfs.github.com/spec/v1
+oid sha256:fdbd51863bfe0e15cdf29291edf4354feb2e489c94b96e821fc67b05474fdbd6
+size 476
