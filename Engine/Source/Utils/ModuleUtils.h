@@ -16,6 +16,8 @@ inline std::string GetCurrentModuleName()
 {
 	Engine& engine = GET_SINGLETON(Engine);
 	auto& app = engine.GetApplication();
+	if(!app) return "Engine";
+
 	for (auto& mod : app->GetModuleManager().GetLoadedModules())
 	{
 		if (mod->GetInstance() == GetCurrentModuleHandle())

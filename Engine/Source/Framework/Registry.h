@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Core/Log.h"
+#include "Utils/Thread.h"
 
 #define REGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, #ModuleClass});
 #define UNREGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, #ModuleClass});
@@ -210,14 +211,17 @@ struct AutoRegister
 
 		static bool Register()
 		{
+			ClassType type(typeid(T));
+			ClassType module(typeid(Module));
+
 			auto& app = GET_SINGLETON(Engine).GetApplication();
 			if(!app) return true;
 
-			app->GetMainThread().Execute([&]()
+			//	the actual module that this is being called from is loaded as a dll, but not officially "loaded" in the engine.
+			//	this loading requires the rest of this engine tick, which we delay here by executing the rest of the register 
+			//	logic on the next tick of the application
+			app->GetMainThread().ExecuteParams([&](ClassType type, ClassType module)
 			{
-				ClassType type(typeid(T));
-				ClassType module(typeid(Module));
-
 				if(!IsModuleLoaded(module.Name)) return; // dont register if this module isnt loaded
 
 				if constexpr (std::is_base_of<ObjectBase, T>::value)
@@ -234,7 +238,7 @@ struct AutoRegister
 				{
 					GET_SINGLETON(PropertyRegistery).Register<T>({ type.Name , module.Name });
 				}	
-			});
+			}, type, module);
 
 			return true;
 		}

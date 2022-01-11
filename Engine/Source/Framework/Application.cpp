@@ -35,8 +35,8 @@ void Application::CoreUpdate(float DeltaTime)
 
 	OnUpdate(DeltaTime);
 
-	//Poll the virtual thread
-	GetMainThread().Poll();
+	//Complete all tasks the virtual thread
+	GetMainThread().Wait();
 }
 
 

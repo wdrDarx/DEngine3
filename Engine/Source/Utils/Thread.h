@@ -107,19 +107,29 @@ public:
 
 	void Poll()
 	{
-	
-		if(!m_Stop && !m_Jobs.empty())
 		{
-			m_Job = m_Jobs.front();
-			m_Jobs.erase(m_Jobs.begin());
-			m_Job();
+			std::unique_lock<std::mutex> lock(m_Mutex);
+
+			if(!m_Jobs.empty() && !m_Stop)
+			{ 
+				m_Job = m_Jobs.front();
+				m_Jobs.erase(m_Jobs.begin());
+			}
+		}
+
+		if(m_Job)
+		{ 
+			m_Job(); // function<void()> type
+			m_Job = nullptr;
 		}
 	}
 
 	void Execute(std::function<void()> New_Job)
 	{
-		std::unique_lock lock(m_Mutex);
-		m_Jobs.push_back(New_Job);
+		{
+			std::unique_lock lock(m_Mutex);
+			m_Jobs.push_back(New_Job);
+		}
 	}
 
 	template <typename Func, typename... Args>
