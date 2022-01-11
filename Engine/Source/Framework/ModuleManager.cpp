@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "Framework/Application.h"
 #include "Utils/FileSystem.h"
+#include "Core/Profiling.h"
 
 
 void ModuleManager::LoadModule(const std::string& FullPath, const std::string& BaseSearchDirectory)
@@ -174,6 +175,8 @@ void ModuleManager::UnloadAllModules()
 
 void ModuleManager::Update(float DeltaTime)
 {
+	PROFILE_FUNC()
+
 	for (auto it = m_LoadedModules.begin(); it != m_LoadedModules.end(); it++)
 	{
 		(*it)->OnUpdate(DeltaTime);

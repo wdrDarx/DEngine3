@@ -24,6 +24,7 @@ include "Vendor/GLFW"
 include "Vendor/ImGui"
 include "Vendor/GLAD"
 include "Vendor/Json"
+include "Vendor/Optick"
 group "" --Dependecies
 
 project "Engine"
@@ -54,6 +55,7 @@ project "Engine"
 		IncludeDir["ASSIMP"],
 		IncludeDir["Json"],
 		IncludeDir["SPD_LOG"],
+		IncludeDir["OPTICK"],
 		IncludeDir["PhysX"]
 	}
 
@@ -75,6 +77,7 @@ project "Engine"
 		"imGui",
 		"Json",
 		"GLFW",
+		"Optick",
 		"GLAD"
 	}
 
@@ -128,6 +131,7 @@ project "Editor"
 		"%{prj.name}/Source",
 		IncludeDir["GLFW"],
 		IncludeDir["GLAD"],
+		IncludeDir["OPTICK"],
 		IncludeDir["ImGui"],
 		IncludeDir["GLM"],
 		IncludeDir["Objloader"],
@@ -196,6 +200,7 @@ project "Runtime"
 		IncludeDir["GLFW"],
 		IncludeDir["GLAD"],
 		IncludeDir["ImGui"],
+		IncludeDir["OPTICK"],
 		IncludeDir["GLM"],
 		IncludeDir["Objloader"],
 		IncludeDir["STB_IMAGE"],

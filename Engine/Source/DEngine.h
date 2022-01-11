@@ -8,11 +8,13 @@
 //Core
 #include "Core/Core.h"
 #include "Core/Log.h"
+#include "Core/Profiling.h"
 
 //Utils
 #include "Utils/Rand.h"
 #include "Utils/Timer.h"
 #include "Utils/ModuleUtils.h"
+#include "Utils/Paths.h"
 
 //Misc
 #include "Misc/Singleton.h"
@@ -28,8 +30,15 @@
 #include "Framework/Module.h"
 #include "Framework/Property.h"
 #include "Framework/ClassType.h"
+#include "Framework/StaticClass.h"
 
 //FrameworkClasses
 #include "Framework/Classes/Properties/PropertyClasses.h"
+
+//Rendering
+#include "Rendering/RenderCore.h"
+
+//UI
+#include "UI/ImGui/ImGuiLayer.h"
 
 

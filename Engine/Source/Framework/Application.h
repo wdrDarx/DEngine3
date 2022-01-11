@@ -7,6 +7,9 @@
 #include "Framework/ModuleManager.h"
 #include "Framework/Registry.h"
 
+//Utils
+#include "Utils/Thread.h"
+
 enum class AppState
 {
 	GAME = 1,
@@ -30,7 +33,7 @@ public:
 
 	Application();
 
-	virtual void OnUpdate(const Tick& tick);
+	virtual void OnUpdate(float DeltaSeconds);
 
 	const AppState& GetAppState() const
 	{		
@@ -154,6 +157,16 @@ public:
 	{
 		m_AppType = type;
 	}
+
+	const Tick& GetLastTick()
+	{
+		return m_LastTick;
+	}
+
+	VirtualThread& GetMainThread()
+	{
+		return m_MainThread;
+	}
 	
 protected:
 	void CoreUpdate(float DeltaTime);
@@ -164,5 +177,6 @@ protected:
 	std::vector<Ref<AppObject>> m_AppObjects;
 	ModuleManager m_ModuleManager;
 	Tick m_LastTick;
+	VirtualThread m_MainThread;
 };
 

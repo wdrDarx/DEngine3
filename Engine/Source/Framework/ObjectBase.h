@@ -3,6 +3,7 @@
 #include "Framework/Tick.h"
 #include "Serialization/Buffer.h"
 #include "Framework/Property.h"
+#include "Framework/StaticClass.h"
 
 enum ConstructFlags
 {
@@ -121,12 +122,6 @@ public:
 	//basically the actual constructor
 	void Initialize(const ObjectInitializer& initializer);
 
-	//this is manually overriden on all object classes with a macro
-	virtual ClassType GetClassType()
-	{
-		return typeid(this);
-	}
-
 	/*
 		used to create the object itself (components, etc)
 		Called before Deserialization so properties wont have their values - Use OnPostConstruct()
@@ -205,6 +200,20 @@ public:
 	//Loads all found props in a buffer 
 	void LoadPropsFromBuffer(const Buffer& buffer);
 
+	//this is manually overriden on all object classes with a macro
+	virtual ClassType GetClassType()
+	{
+		return typeid(this);
+	}
+
+	//get static class - use OBJECT_STATIC_CLASS()
+	template<class T>
+	static StaticClass _GetStaticClass()
+	{
+		StaticClass out;
+		out.FromTemlate<T>();
+		return out;
+	}
 
 	const ObjectInitializer& GetObjectInitializer() const
 	{

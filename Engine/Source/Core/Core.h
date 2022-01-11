@@ -155,6 +155,9 @@ struct test_base_template<BaseTemplate, Derived, std::enable_if_t<!std::is_class
 	using is_base = std::false_type;
 };
 
+#define FORCE_BASE_CLASS(Typename, BaseClass) static_assert(std::is_base_of<BaseClass, Typename>::value, "Typename is not a child of This Base Class"); 
+
+
 
 
 

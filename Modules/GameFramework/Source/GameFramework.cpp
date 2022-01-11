@@ -10,12 +10,7 @@ void GameFramework::OnLoad()
 		//std::cout << "Failed to initialize OpenGL context" << std::endl;
 	}
 
-	LOG_INFO("Loaded Game Framework");
-	Property* prop = GET_SINGLETON(PropertyRegistery).Make({"FloatProperty", "Engine"});
-
-	StaticProperty myStaticProp = StaticProperty::Make<int>("SusTEst", 69);
-	LOG_INFO(myStaticProp.m_Name + STRING(*(int*)myStaticProp.GetRawValue()));
-	LOG_WARN("This Module Name : " + std::string(GetCurrentModuleName()));
+	LOG_WARN("Loaded Module : " + std::string(GetCurrentModuleName()));
 }
 
 void GameFramework::TestMethod(const PropArray& args)
@@ -27,7 +22,7 @@ void GameFramework::TestMethod(const PropArray& args)
 
 void GameFramework::OnUnload()
 {
-
+	LOG_WARN("Unloaded Module : " + std::string(GetCurrentModuleName()));
 
 }
 

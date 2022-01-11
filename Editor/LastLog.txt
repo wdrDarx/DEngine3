@@ -9118,3 +9118,19 @@
 [01:12:26] FileCore: Name : Dababy
 [01:12:26] FileCore: Age : 100.000000
 [01:12:26] FileCore: Loaded Project
+[15:23:11] FileCore: Loaded Game Framework
+[15:23:11] FileCore: SusTEst69
+[15:23:11] FileCore: This Module Name : GameFramework
+[15:23:11] FileCore: Loaded Project
+[15:23:11] FileCore: This Module Name : Engine
+[16:03:27] FileCore: Loaded Game Framework
+[16:03:27] FileCore: SusTEst69
+[16:03:27] FileCore: This Module Name : GameFramework
+[16:03:27] FileCore: Loaded Project
+[16:03:27] FileCore: This Module Name : Engine
+[16:14:36] FileCore: Loaded Module : GameFramework
+[16:14:36] FileCore: Loaded Module : Project
+[17:07:14] FileCore: Loaded Module : GameFramework
+[17:07:14] FileCore: Loaded Module : Project
+[17:07:15] FileCore: Unloaded Module : GameFramework
+[17:07:17] FileCore: Unloaded Module : Project

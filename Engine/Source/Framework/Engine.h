@@ -19,6 +19,11 @@ public:
 		return m_Applications;
 	}
 
+	float GetCurrentDeltaTime() const
+	{
+		return m_DeltaTime;
+	}
+
 private:
 	void Update();
 	std::vector<Ref<Application>> m_Applications;
@@ -28,4 +33,9 @@ private:
 };
 
 DEFINE_SINGLETON(Engine, Get_Engine);
+
+inline float GetCurrentDeltaTime()
+{
+	return GET_SINGLETON(Engine).GetCurrentDeltaTime();
+}
 

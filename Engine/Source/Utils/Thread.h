@@ -118,6 +118,7 @@ public:
 
 	void Execute(std::function<void()> New_Job)
 	{
+		std::unique_lock lock(m_Mutex);
 		m_Jobs.push_back(New_Job);
 	}
 
@@ -142,5 +143,6 @@ public:
 
 	bool m_Stop = false;
 	std::function<void()> m_Job;
+	std::mutex m_Mutex;
 	std::vector<std::function<void()>> m_Jobs;
 };

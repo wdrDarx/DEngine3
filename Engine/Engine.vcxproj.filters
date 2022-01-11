@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{1362EE31-7FCC-A2A8-C80A-544E34B480FD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Classes">
+      <UniqueIdentifier>{F0330A11-5C4A-08A7-A5C1-93C81117D92E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Classes\Properties">
+      <UniqueIdentifier>{AC0C3827-98C7-27D3-417F-A01D2D197263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{9116897C-7D4D-8A0D-263A-70101250060F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{2319AF09-8FD9-2A40-5814-74BDC4936F1C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Core\Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Log.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Profiling.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Types.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DEngine.h" />
+    <ClInclude Include="Source\Framework\AppObject.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Application.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\ClassType.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Classes\Properties\PropertyClasses.h">
+      <Filter>Framework\Classes\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Engine.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\FrameworkMacros.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Module.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\ModuleManager.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\ObjectBase.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Property.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Registry.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\StaticClass.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Tick.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Misc\Singleton.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\Buffer.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\FileSystem.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\ModuleUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\Rand.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\Thread.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\RenderCore.h" />
+    <ClInclude Include="Source\Rendering\Window.h" />
+    <ClInclude Include="Source\Rendering\RenderAPI.h" />
+    <ClInclude Include="Source\Utils\Paths.h" />
+    <ClInclude Include="Source\UI\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="Source\UI\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Source\UI\ImGui\ImGuiLayer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Core\Log.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\AppObject.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Application.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Engine.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Module.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\ModuleManager.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\ObjectBase.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Property.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\StaticClass.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Misc\Singleton.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Serialization\Buffer.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utils\FileSystem.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utils\Rand.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\Window.cpp" />
+    <ClCompile Include="Source\Rendering\RenderAPI.cpp" />
+    <ClCompile Include="Source\Utils\Paths.cpp" />
+    <ClCompile Include="Source\UI\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Source\UI\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Source\UI\ImGui\ImGuiLayer.cpp" />
+  </ItemGroup>
+</Project>
