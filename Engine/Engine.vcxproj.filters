@@ -104,6 +104,10 @@
     <ClInclude Include="Source\UI\ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="Source\UI\ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="Source\UI\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="Source\Event\Callback.h" />
+    <ClInclude Include="Source\Event\Event.h" />
+    <ClInclude Include="Source\Event\EventDispatcher.h" />
+    <ClInclude Include="Source\Utils\VectorUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Log.cpp">

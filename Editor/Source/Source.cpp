@@ -6,7 +6,7 @@ int main()
 {
 	Engine& engine = GET_SINGLETON(Engine);
 	Ref<Application> app = MakeRef<EditorApp>();
-	engine.AddApplication(app);
+	engine.SetApplication(app);
 	Cast<EditorApp>(app)->Init();
 	engine.Start();
 

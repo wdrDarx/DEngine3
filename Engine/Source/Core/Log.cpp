@@ -16,36 +16,3 @@ Log::Log()
 	m_CoreLogger->info("Initialized Log");
 }
 
-void Log::LogTemp(const std::string& text) 
-{
-	m_CoreLogger->trace(text);
-	m_LogAmount++;
-	if(LOG_FILE)
-		m_FileLogger->trace(text);
-}
-
-void Log::LogWarn(const std::string& text) 
-{
-	m_CoreLogger->warn(text);
-	m_LogAmount++;
-
-	if (LOG_FILE)
-		m_FileLogger->warn(text);
-}
-
-void Log::LogError(const std::string& text) 
-{
-	m_CoreLogger->error(text);
-	m_LogAmount++;
-	if (LOG_FILE)
-		m_FileLogger->error(text);
-}
-
-
-void Log::LogInfo(const std::string& text) 
-{
-	m_CoreLogger->info(text);
-	m_LogAmount++;
-	if (LOG_FILE)
-		m_FileLogger->info(text);
-}

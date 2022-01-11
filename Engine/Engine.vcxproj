@@ -147,6 +147,9 @@
     <ClInclude Include="Source\Core\Profiling.h" />
     <ClInclude Include="Source\Core\Types.h" />
     <ClInclude Include="Source\DEngine.h" />
+    <ClInclude Include="Source\Event\Callback.h" />
+    <ClInclude Include="Source\Event\Event.h" />
+    <ClInclude Include="Source\Event\EventDispatcher.h" />
     <ClInclude Include="Source\Framework\AppObject.h" />
     <ClInclude Include="Source\Framework\Application.h" />
     <ClInclude Include="Source\Framework\ClassType.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="Source\Utils\Rand.h" />
     <ClInclude Include="Source\Utils\Thread.h" />
     <ClInclude Include="Source\Utils\Timer.h" />
+    <ClInclude Include="Source\Utils\VectorUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Log.cpp" />

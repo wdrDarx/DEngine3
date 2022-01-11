@@ -80,6 +80,9 @@ void Window::StartFrame()
 {
 	PROFILE_FUNC()
 
+	if (m_Closed)
+		return;
+
 	//bind context if not bound
 	if (!GetRenderAPI()->IsContextBound())
 	{
@@ -88,11 +91,12 @@ void Window::StartFrame()
 
 	if (glfwWindowShouldClose(GetRenderAPI()->GetCurrentContext()))
 	{
-// 		WindowEvent event;
-//  		event.m_EventType = WindowEventType::CLOSED;
-//  		m_EventDispatcher.Dispatch(event);
+ 		EventWindowClosed event;
+		event.window = this;
+  		m_EventDispatcher.Dispatch(event);
 
 		glfwDestroyWindow(GetRenderAPI()->GetCurrentContext());
+		m_Closed = true;
 		ClearCurrentContext();
 		return;
 	}
@@ -104,6 +108,9 @@ void Window::StartFrame()
 void Window::EndFrame()
 {
 	PROFILE_FUNC()
+
+	if(m_Closed)
+		return;
 
 	//bind context if not bound
 	if (!GetRenderAPI()->IsContextBound())
@@ -118,12 +125,23 @@ void Window::EndFrame()
 void Window::OnWindowResize(GLFWwindow* window, int width, int height)
 {
 	//dispatch resize event
-// 	WindowEvent event;
-// 	event.m_EventType = WindowEventType::RESIZED;
-// 	event.m_NewSize = {width, height};
-// 	m_EventDispatcher.Dispatch(event);
+ 	EventWindowResized event;
+	event.NewSize = { width, height };
+	event.window = this;
+ 	m_EventDispatcher.Dispatch(event);
 
 	GetRenderAPI()->SetViewport({width, height});
+}
+
+
+void Window::BindOnWindowResized(Callback<EventWindowResized>& callback)
+{
+	m_EventDispatcher.Bind(callback);
+}
+
+void Window::BindOnWindowClosed(Callback<EventWindowClosed>& callback)
+{
+	m_EventDispatcher.Bind(callback);
 }
 
 void Window::SetCurrentContext()

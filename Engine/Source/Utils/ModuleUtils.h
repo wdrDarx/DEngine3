@@ -15,18 +15,29 @@ inline HMODULE GetCurrentModuleHandle()
 inline std::string GetCurrentModuleName()
 {
 	Engine& engine = GET_SINGLETON(Engine);
-	for (auto& app : engine.GetApplications())
+	auto& app = engine.GetApplication();
+	for (auto& mod : app->GetModuleManager().GetLoadedModules())
 	{
-		for (auto& mod : app->GetModuleManager().GetLoadedModules())
+		if (mod->GetInstance() == GetCurrentModuleHandle())
 		{
-			if (mod->GetInstance() == GetCurrentModuleHandle())
-			{
-				return mod->GetThisModuleName();
-			}
+			return mod->GetThisModuleName();
 		}
 	}
 
 	return "Engine";
+}
+
+inline bool IsModuleLoaded(const std::string& ModuleName)
+{
+	if(ModuleName == "Engine") return true;
+
+	Engine& engine = GET_SINGLETON(Engine);
+	auto& app = engine.GetApplication();
+
+	if(!app)
+		return false;
+
+	return app->GetModuleManager().IsModuleLoaded(ModuleName);
 }
 
 #endif

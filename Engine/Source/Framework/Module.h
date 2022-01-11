@@ -7,37 +7,6 @@
 #define MODULEDEF(name) Module* CreateModule() { return new name(#name); };
 
 
-struct Dependency
-{
-	std::string ModuleName;
-};
-
-struct ModuleMetadata
-{
-	std::vector<Dependency> Dependencies;
-
-	void FromJson(const Json::Value& json)
-	{
-		if (json["Dependencies"].isArray())
-		{
-			for (uint i = 0; i < json["Dependencies"].size(); i++)
-			{
-				Dependencies.push_back({json["Dependencies"][0].asString()});
-			}
-		}
-	}
-
- 	Json::Value ToJson()
- 	{
-		Json::Value out;
-		for(uint i = 0; i < Dependencies.size(); i++)
-		{
-			out["Dependencies"][i] = Dependencies[i].ModuleName;
-		}
-		
-		return out;
- 	}
-};
 
 
 class Application;

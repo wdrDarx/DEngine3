@@ -1,5 +1,21 @@
 #pragma once
 #include "Rendering/RenderAPI.h"
+#include "Event/Callback.h"
+#include "Event/Event.h"
+#include "Event/EventDispatcher.h"
+
+
+class Window;
+struct EventWindowClosed : public Event
+{
+	Window* window;
+};
+
+struct EventWindowResized : public Event
+{
+	Window* window;
+	vec2d NewSize;
+};
 
 //houses a window with a rendering context and input manager specific to this window
 class DENGINE_API Window
@@ -25,6 +41,14 @@ public:
 	}
 
 	void OnWindowResize(GLFWwindow* window, int width, int height);
+
+	void BindOnWindowResized(Callback<EventWindowResized>& callback);
+	void BindOnWindowClosed(Callback<EventWindowClosed>& callback);
+
+	bool IsClosed() const
+	{
+		return m_Closed;
+	}
 
 	void SetCurrentContext();
 
@@ -79,7 +103,7 @@ private:
 	//InputMode m_InputMode = InputMode::UI;
 
 	//calls window events
-	//EventDispatcher m_EventDispatcher;
+	EventDispatcher m_EventDispatcher;
 
 	//main input manager recieveing any window inputs and relaying them
 	//InputManager m_InputManager;
@@ -88,5 +112,7 @@ private:
 	Ref<RenderAPI> m_RenderAPI;
 
 	bool m_Vsync = false;
+	bool m_Closed = false;
 };
+
 

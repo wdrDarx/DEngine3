@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "Framework/Application.h"
 #include "Utils/FileSystem.h"
+#include "Utils/VectorUtils.h"
 #include "Core/Profiling.h"
 
 
@@ -34,7 +35,7 @@ void ModuleManager::LoadModule(const std::string& FullPath, const std::string& B
 		//finally load the actual module
 		std::filesystem::path parent = std::filesystem::path(FullPath).parent_path();
 		std::string dllPath = parent.string() + "\\" + File::GetFileNameFromPath(FullPath) + ".dll";
-		LoadModuleDLL(dllPath);
+		LoadModuleDLL(dllPath, metadata);
 	}
 	else
 	{
@@ -42,7 +43,7 @@ void ModuleManager::LoadModule(const std::string& FullPath, const std::string& B
 	}
 }
 
-void ModuleManager::LoadModuleDLL(const std::string& ModuleDLLPath)
+void ModuleManager::LoadModuleDLL(const std::string& ModuleDLLPath, const ModuleMetadata& metadata)
 {
 	//add the module dir (modules/myModule) as a dll path for external libs
 	auto path = std::filesystem::path(ModuleDLLPath);
@@ -58,7 +59,12 @@ void ModuleManager::LoadModuleDLL(const std::string& ModuleDLLPath)
 	m_LoadedModules.push_back(mod); //add to module array
 	mod->m_ModuleManager = this;
 	mod->m_App = m_App;
+	mod->SetMetadata(metadata);
 	mod->OnLoad();
+
+	EventModuleLoaded event;
+	event.ModuleName = mod->GetThisModuleName();
+	m_EventDispatcher.Dispatch(event);
 }
 
 void ModuleManager::LoadModuleFromName(const std::string& ModuleName, const std::string& SearchPath)
@@ -75,11 +81,13 @@ void ModuleManager::LoadModuleFromName(const std::string& ModuleName, const std:
 				if (file.is_regular_file() && file.path().extension().string() == ".Module")
 				{
 					LoadModule(file.path().string(), SearchPath);
+					return;
 				}
 			}
 		}
 	}
 
+	LOG_ERROR("Module '{0}' Was not found", ModuleName);
 	
 }
 
@@ -117,6 +125,21 @@ void ModuleManager::LoadAllModules(const std::string& FolderPath)
 	}
 }
 
+
+std::vector<std::string> ModuleManager::GetAllAvailableModuleNames(const std::string& FolderPath) const
+{
+	std::vector<std::string> ModuleNames;
+	for (const auto& file : std::filesystem::directory_iterator(FolderPath))
+	{
+		if (file.is_directory())
+		{
+			ModuleNames.push_back(file.path().filename().string());
+		}
+	}
+
+	 return ModuleNames;
+}
+
 void ModuleManager::UnloadModule(const std::string& ModuleName)
 {
 	Module* ToUnload = nullptr;
@@ -152,9 +175,15 @@ void ModuleManager::UnloadModule(const std::string& ModuleName)
 	}
 
 	//finally unload the og module 
+	EventModuleUnloaded event;
+	event.ModuleName = ToUnload->GetThisModuleName();
+	m_EventDispatcher.Dispatch(event);
+
 	ToUnload->OnUnload();
 	delete ToUnload;
 	m_LoadedModules.erase(ToUnloadIt);
+
+	
 }
 
 void ModuleManager::UnloadAllModules()

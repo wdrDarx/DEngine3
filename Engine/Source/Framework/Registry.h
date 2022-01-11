@@ -111,9 +111,10 @@ public:
 		auto it = subclassInstantiators.find(key);
 		if (it != subclassInstantiators.end())
 		{
-			//registered twice
+			LOG_WARN("{0} is already registered!", key.name);
 		}
 		subclassInstantiators.emplace(key, &createInstance<U>);
+		LOG_INFO("Registered {0} from {1}", key.name, key.AssignedModuleName);
 	}
 
 	void Unregister(const Key& key)
@@ -122,6 +123,7 @@ public:
 		if (it != subclassInstantiators.end())
 		{
 			subclassInstantiators.erase(it);
+			LOG_INFO("Unregistered {0} from {1}", key.name, key.AssignedModuleName);
 		}
 		else
 		{
@@ -208,23 +210,31 @@ struct AutoRegister
 
 		static bool Register()
 		{
-			ClassType type(typeid(T));
-			ClassType module(typeid(Module));
+			auto& app = GET_SINGLETON(Engine).GetApplication();
+			if(!app) return true;
 
-			if constexpr (std::is_base_of<ObjectBase, T>::value)
+			app->GetMainThread().Execute([&]()
 			{
-				GET_SINGLETON(ObjectRegistry).Register<T>({ type.Name , module.Name });
-			}
+				ClassType type(typeid(T));
+				ClassType module(typeid(Module));
 
-			if constexpr (std::is_base_of<StructBase, T>::value)
-			{
-				GET_SINGLETON(StructRegistry).Register<T>({ type.Name , module.Name });
-			}
+				if(!IsModuleLoaded(module.Name)) return; // dont register if this module isnt loaded
 
-			if constexpr (std::is_base_of<Property, T>::value)
-			{
-				GET_SINGLETON(PropertyRegistery).Register<T>({ type.Name , module.Name });
-			}		
+				if constexpr (std::is_base_of<ObjectBase, T>::value)
+				{
+					GET_SINGLETON(ObjectRegistry).Register<T>({ type.Name , module.Name });
+				}
+
+				if constexpr (std::is_base_of<StructBase, T>::value)
+				{
+					GET_SINGLETON(StructRegistry).Register<T>({ type.Name , module.Name });
+				}
+
+				if constexpr (std::is_base_of<Property, T>::value)
+				{
+					GET_SINGLETON(PropertyRegistery).Register<T>({ type.Name , module.Name });
+				}	
+			});
 
 			return true;
 		}

@@ -157,9 +157,9 @@ IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Runtime-w
     <ClInclude Include="Source\Classes\ModulesSection.h" />
     <ClInclude Include="Source\Classes\EditorSection.h" />
     <ClInclude Include="Source\Classes\EditorApp.h" />
+    <ClInclude Include="Source\Classes\RegistrySection.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Classes\ModulesSection.cpp" />
     <ClCompile Include="Source\Classes\EditorSection.cpp" />
     <ClCompile Include="Source\Classes\EditorApp.cpp" />
     <ClCompile Include="Source\Source.cpp" />

@@ -2,9 +2,12 @@
 #include "Application.h"
 #include "DEngine.h"
 
+#define AUTO_UNREGISTER 1
+
 Application::Application() : m_ModuleManager(ToRef<Application>(this)) //initialize module manager
 {
-
+	if(AUTO_UNREGISTER)
+		m_ModuleManager.BindOnModuleUnloaded(m_ModuleUnloadedCallback);
 }
 
 void Application::OnUpdate(float DeltaTime)
@@ -33,14 +36,11 @@ void Application::CoreUpdate(float DeltaTime)
 	OnUpdate(DeltaTime);
 
 	//Poll the virtual thread
-	{
-
-	}
 	GetMainThread().Poll();
 }
 
 
 void Application::Shutdown()
 {
-	
+	GET_SINGLETON(Engine).Stop();
 }

@@ -15,8 +15,7 @@ void GameFramework::OnLoad()
 
 void GameFramework::TestMethod(const PropArray& args)
 {
-	LOG_INFO(std::string("Name : ") + std::string(args.Get<std::string>("Name")));
-	LOG_INFO(std::string("Age : ") + STRING(args.Get<float>("Age")));
+	
 }
 
 

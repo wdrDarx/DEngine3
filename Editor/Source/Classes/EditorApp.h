@@ -50,6 +50,22 @@ public:
 		return m_ImGuiLayer;
 	}
 
+	Callback<EventWindowClosed> m_EditorWindowCloseCallback = [&](EventWindowClosed& event) 
+	{
+		Application::Shutdown();
+	};
+
+	Callback<EventWindowClosed> m_WindowCloseEvent = [&](EventWindowClosed& event)
+	{	
+		//need to call the next tick because the window still needs to destoy context
+		GetMainThread().ExecuteParams([&](Window* window)
+		{
+
+			VectorUtils::RemovePointerFromRefVector(window, m_Windows);
+
+		}, event.window);		
+	};
+
 	ImGuiLayer m_ImGuiLayer;
 	Ref<Window> m_EditorWindow = nullptr;
 	std::vector<Ref<Window>> m_Windows;

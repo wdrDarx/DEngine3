@@ -6,7 +6,7 @@ class Application;
 class DENGINE_API Engine
 {
 public:
-	void AddApplication(Ref<Application> app);
+	void SetApplication(Ref<Application> app);
 
 	//start main while loop
 	void Start();
@@ -14,9 +14,9 @@ public:
 	//flags for shutdown
 	void Stop();
 
-	std::vector<Ref<Application>> GetApplications() const
+	Ref<Application> GetApplication() const
 	{
-		return m_Applications;
+		return m_Application;
 	}
 
 	float GetCurrentDeltaTime() const
@@ -26,7 +26,7 @@ public:
 
 private:
 	void Update();
-	std::vector<Ref<Application>> m_Applications;
+	Ref<Application> m_Application = nullptr;
 	std::chrono::time_point<std::chrono::steady_clock> m_LastTime = std::chrono::high_resolution_clock::now();
 	float m_DeltaTime;
 	bool m_MarkShutdown = false;

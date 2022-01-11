@@ -10,6 +10,9 @@
 //Utils
 #include "Utils/Thread.h"
 
+//Events
+#include "Event/Callback.h"
+
 enum class AppState
 {
 	GAME = 1,
@@ -167,16 +170,61 @@ public:
 	{
 		return m_MainThread;
 	}
-	
+
+
 protected:
 	void CoreUpdate(float DeltaTime);
 	void Shutdown();
 
+	bool m_IsShuttingDown = false;
 	AppState m_AppState;
 	AppType m_AppType;
 	std::vector<Ref<AppObject>> m_AppObjects;
 	ModuleManager m_ModuleManager;
 	Tick m_LastTick;
 	VirtualThread m_MainThread;
+
+private:
+		Callback<EventModuleUnloaded> m_ModuleUnloadedCallback = [&](EventModuleUnloaded& event)
+		{
+			//Auto unregister any keys associated with module
+			ObjectRegistry& ObjectReg = GET_SINGLETON(ObjectRegistry);
+			StructRegistry& StructReg = GET_SINGLETON(StructRegistry);
+			PropertyRegistery& PropReg = GET_SINGLETON(PropertyRegistery);
+			AssetRegistry& AssetReg = GET_SINGLETON(AssetRegistry);
+
+			for (auto& reg : ObjectReg.GetRegisteredKeys())
+			{
+				if (reg.AssignedModuleName == event.ModuleName)
+				{
+					ObjectReg.Unregister(reg);
+				}
+			}
+
+			for (auto& reg : StructReg.GetRegisteredKeys())
+			{
+				if (reg.AssignedModuleName == event.ModuleName)
+				{
+					StructReg.Unregister(reg);
+				}
+			}
+
+			for (auto& reg : PropReg.GetRegisteredKeys())
+			{
+				if (reg.AssignedModuleName == event.ModuleName)
+				{
+					PropReg.Unregister(reg);
+				}
+			}
+
+			for (auto& reg : AssetReg.GetRegisteredKeys())
+			{
+				if (reg.AssignedModuleName == event.ModuleName)
+				{
+					AssetReg.Unregister(reg);
+				}
+			}
+		};
+
 };
 

@@ -10,23 +10,27 @@ class Log
 {
 	public:
 
-		Log();
+	Log();
 
-		void LogTemp(const std::string& text);
-		void LogWarn(const std::string& text);
-		void LogError(const std::string& text);
-		void LogInfo(const std::string& text);
-
-		std::shared_ptr<spdlog::logger> m_CoreLogger;
-		std::shared_ptr<spdlog::logger> m_FileLogger;
-		std::shared_ptr<spdlog::logger> m_AppLogger;
-
-		int m_LogAmount;
+	std::shared_ptr<spdlog::logger> m_CoreLogger;
+	std::shared_ptr<spdlog::logger> m_FileLogger;
+	std::shared_ptr<spdlog::logger> m_AppLogger;
 };
 
 DEFINE_SINGLETON(Log, Get_Log);
 
-#define LOG_TEMP(...) GET_SINGLETON(Log).LogTemp(__VA_ARGS__)
-#define LOG_WARN(...) GET_SINGLETON(Log).LogWarn(__VA_ARGS__)
-#define LOG_ERROR(...) GET_SINGLETON(Log).LogError(__VA_ARGS__)
-#define LOG_INFO(...) GET_SINGLETON(Log).LogInfo(__VA_ARGS__)
+#define LOG_TEMP(...) GET_SINGLETON(Log).m_CoreLogger->trace(__VA_ARGS__); \
+if (LOG_FILE) \
+GET_SINGLETON(Log).m_FileLogger->trace(__VA_ARGS__); 
+
+#define LOG_WARN(...) GET_SINGLETON(Log).m_CoreLogger->warn(__VA_ARGS__); \
+if (LOG_FILE) \
+GET_SINGLETON(Log).m_FileLogger->warn(__VA_ARGS__); 
+
+#define LOG_ERROR(...) GET_SINGLETON(Log).m_CoreLogger->error(__VA_ARGS__); \
+if (LOG_FILE) \
+GET_SINGLETON(Log).m_FileLogger->error(__VA_ARGS__); 
+
+#define LOG_INFO(...) GET_SINGLETON(Log).m_CoreLogger->info(__VA_ARGS__); \
+if (LOG_FILE) \
+GET_SINGLETON(Log).m_FileLogger->info(__VA_ARGS__); \

@@ -1,5 +1,8 @@
 #include "EditorApp.h"
+
+//Sections
 #include "ModulesSection.h"
+#include "RegistrySection.h"
 
 EditorApp::EditorApp() : Application()
 {
@@ -23,8 +26,12 @@ void EditorApp::Init()
 	GetEditorWindow()->SetCurrentContext();
 	GetImGuiLayer().Init(m_EditorWindow.get());
 
-	//Create the modules section
+	//Create sections
 	CreateEditorSection<ModulesSection>(GetEditorWindow().get());
+	CreateEditorSection<RegistrySection>(GetEditorWindow().get());
+
+	//bind to shutdown if the main window is closed
+	GetEditorWindow()->BindOnWindowClosed(m_EditorWindowCloseCallback);
 }
 
 void EditorApp::OnUpdate(float DeltaSeconds)
@@ -48,6 +55,7 @@ void EditorApp::BeginFrame()
 {
 	for (auto& window : GetWindows())
 	{
+		if (window->IsClosed()) continue;
 		window->StartFrame();
 	}
 }
@@ -56,6 +64,7 @@ void EditorApp::EndFrame()
 {
 	for (auto& window : GetWindows())
 	{
+		if(window->IsClosed()) continue;
 		if (window == GetEditorWindow())
 		{		
 			//if (m_ImGuiLayer.IsValid())
@@ -75,5 +84,6 @@ Ref<Window> EditorApp::CreateNewWindow(const std::string& name, const vec2d& siz
 {
 	Ref<Window> newWindow = MakeRef<Window>(name, size.x, size.y);
 	m_Windows.push_back(newWindow);
+	newWindow->BindOnWindowClosed(m_WindowCloseEvent);
 	return newWindow;
 }

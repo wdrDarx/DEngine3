@@ -15,6 +15,12 @@
 #include "Utils/Timer.h"
 #include "Utils/ModuleUtils.h"
 #include "Utils/Paths.h"
+#include "Utils/VectorUtils.h"
+
+//Event
+#include "Event/Callback.h"
+#include "Event/Event.h"
+#include "Event/EventDispatcher.h"
 
 //Misc
 #include "Misc/Singleton.h"
