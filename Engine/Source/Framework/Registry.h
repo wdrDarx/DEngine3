@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Core/Profiling.h"
 #include "Core/Log.h"
 #include "Utils/Thread.h"
 
@@ -136,6 +137,8 @@ public:
 
 	T* Make(const Key& subclass_key, ConstructionArgs... args) const
 	{
+		PROFILE_FUNC()
+
 		auto it = subclassInstantiators.find(subclass_key);
 		if (it == subclassInstantiators.end())
 		{
@@ -153,6 +156,8 @@ public:
 
 	T* MakeObjectFromClassName(const std::string& FriendlyClassName, ConstructionArgs... args) const
 	{
+		PROFILE_FUNC()
+
 		for (auto it = subclassInstantiators.begin(); it != subclassInstantiators.end(); it++)
 		{
 			if ((*it).first.name == FriendlyClassName)
@@ -222,6 +227,8 @@ struct AutoRegister
 			//	logic on the next tick of the application
 			app->GetMainThread().ExecuteParams([&](ClassType type, ClassType module)
 			{
+				PROFILE_FUNC("Register Invoke")
+
 				if(!IsModuleLoaded(module.Name)) return; // dont register if this module isnt loaded
 
 				if constexpr (std::is_base_of<ObjectBase, T>::value)

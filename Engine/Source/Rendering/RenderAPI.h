@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Core/Profiling.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Core/Log.h"

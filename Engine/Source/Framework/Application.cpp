@@ -36,6 +36,7 @@ void Application::CoreUpdate(float DeltaTime)
 	OnUpdate(DeltaTime);
 
 	//Complete all tasks the virtual thread
+	PROFILE_FUNC("Main Thread Tasks")
 	GetMainThread().Wait();
 }
 

@@ -41,12 +41,16 @@ RenderAPI::RenderAPI(GLFWwindow* windowContext) : m_windowContext(windowContext)
 
 void RenderAPI::SetCurrentContext(GLFWwindow* windowContext)
 {
+	PROFILE_FUNC()
+
 	glfwMakeContextCurrent(windowContext);
 	m_windowContext = windowContext;
 }
 
 void RenderAPI::ClearCurrentContext()
 {
+	PROFILE_FUNC()
+
 	glfwMakeContextCurrent(nullptr);
 	m_windowContext = nullptr;
 }

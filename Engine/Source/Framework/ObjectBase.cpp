@@ -3,6 +3,8 @@
 
 void ObjectBase::Initialize(const ObjectInitializer& initializer)
 {
+	PROFILE_FUNC()
+
 	//assign the member initializer for later use
 	m_ObjectInitializer = initializer;
 
@@ -40,6 +42,8 @@ void ObjectBase::Initialize(const ObjectInitializer& initializer)
 
 size_t ObjectBase::Serialize(Buffer& buffer) const
 {
+	PROFILE_FUNC()
+
 	BufferWritter writter(buffer, 0);
 	writter.Write(&GetID(), sizeof(UID));
 	writter.WriteString(GetName());
@@ -51,6 +55,8 @@ size_t ObjectBase::Serialize(Buffer& buffer) const
 
 size_t ObjectBase::Deserialize(const Buffer& buffer)
 {
+	PROFILE_FUNC()
+
 	BufferReader reader(buffer, 0);
 	reader.Read(&m_ID, sizeof(UID));
 	reader.ReadString(m_Name);
@@ -65,6 +71,8 @@ size_t ObjectBase::Deserialize(const Buffer& buffer)
 
 Buffer ObjectBase::GeneratePropBuffer() const
 {
+	PROFILE_FUNC()
+
 	BufferArray PropsArray;
 
 	for (auto& prop : GetProperties())
@@ -77,6 +85,8 @@ Buffer ObjectBase::GeneratePropBuffer() const
 
 void ObjectBase::LoadPropsFromBuffer(const Buffer& buffer)
 {
+	PROFILE_FUNC()
+
 	BufferArray PropsArray(buffer);
 
 	for (auto& piece : PropsArray.GetDataPieces())

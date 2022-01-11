@@ -3,6 +3,8 @@
 
 Buffer Property::MakeBuffer() const
 {
+	PROFILE_FUNC()
+
 	Buffer out;
 	BufferWritter writter(out);
 	writter.WriteString(m_Name);
@@ -16,6 +18,8 @@ Buffer Property::MakeBuffer() const
 
 void Property::FromBuffer(const Buffer& buffer)
 {
+	PROFILE_FUNC()
+
 	BufferReader reader(buffer);
 	reader.ReadString(m_Name);
 	reader.ReadClassType(m_Type); //typename of this property
@@ -30,6 +34,8 @@ void Property::FromBuffer(const Buffer& buffer)
 
 void Property::LoadAllMetadata(const Buffer& buffer)
 {
+	PROFILE_FUNC()
+
 	BufferReader reader(buffer);
 	reader.ReadString(m_Name);
 	reader.ReadClassType(m_Type); //typename of this property
@@ -39,6 +45,8 @@ void Property::LoadAllMetadata(const Buffer& buffer)
 
 void StaticProperty::FromProperty(const Property& prop)
 {
+	PROFILE_FUNC()
+
 	m_Data = prop.MakeValueBuffer(prop.GetValue());
 	m_Type = prop.m_Type;
 	m_Name = prop.GetName();
@@ -48,6 +56,8 @@ void StaticProperty::FromProperty(const Property& prop)
 
 void* StaticProperty::GetRawValue() const
 {
+	PROFILE_FUNC()
+
 	PropertyRegistery& registry = GET_SINGLETON(PropertyRegistery);
 	for (auto& reg : registry.GetRegisteredKeys())
 	{

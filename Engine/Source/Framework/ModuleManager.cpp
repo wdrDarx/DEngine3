@@ -6,9 +6,10 @@
 #include "Utils/VectorUtils.h"
 #include "Core/Profiling.h"
 
-
 void ModuleManager::LoadModule(const std::string& FullPath, const std::string& BaseSearchDirectory)
 {
+	PROFILE_FUNC()
+
 	//full path points to a .Module file
 	if (IsModuleLoaded(File::GetFileNameFromPath(FullPath))) return;
 
@@ -45,6 +46,8 @@ void ModuleManager::LoadModule(const std::string& FullPath, const std::string& B
 
 void ModuleManager::LoadModuleDLL(const std::string& ModuleDLLPath, const ModuleMetadata& metadata)
 {
+	PROFILE_FUNC()
+
 	//add the module dir (modules/myModule) as a dll path for external libs
 	auto path = std::filesystem::path(ModuleDLLPath);
 	SetDllDirectoryA(path.parent_path().string().c_str());
@@ -69,6 +72,8 @@ void ModuleManager::LoadModuleDLL(const std::string& ModuleDLLPath, const Module
 
 void ModuleManager::LoadModuleFromName(const std::string& ModuleName, const std::string& SearchPath)
 {
+	PROFILE_FUNC()
+
 	if (IsModuleLoaded(ModuleName)) return;
 
 	for (const auto& file : std::filesystem::directory_iterator(SearchPath))
@@ -93,6 +98,8 @@ void ModuleManager::LoadModuleFromName(const std::string& ModuleName, const std:
 
 bool ModuleManager::IsModuleLoaded(const std::string& ModuleName)
 {
+	PROFILE_FUNC()
+
 	for (auto it = m_LoadedModules.begin(); it != m_LoadedModules.end(); it++)
 	{
 		Module* mod = *it;
@@ -107,6 +114,8 @@ bool ModuleManager::IsModuleLoaded(const std::string& ModuleName)
 
 void ModuleManager::LoadAllModules(const std::string& FolderPath)
 {
+	PROFILE_FUNC()
+
 	std::vector<std::string> ModuleNames;
 	for (const auto& file : std::filesystem::directory_iterator(FolderPath))
 	{
@@ -142,6 +151,8 @@ std::vector<std::string> ModuleManager::GetAllAvailableModuleNames(const std::st
 
 void ModuleManager::UnloadModule(const std::string& ModuleName)
 {
+	PROFILE_FUNC()
+
 	Module* ToUnload = nullptr;
 	std::vector<Module*>::iterator  ToUnloadIt;
 	for (auto it = m_LoadedModules.begin(); it != m_LoadedModules.end(); it++)
@@ -188,6 +199,8 @@ void ModuleManager::UnloadModule(const std::string& ModuleName)
 
 void ModuleManager::UnloadAllModules()
 {
+	PROFILE_FUNC()
+
 	std::vector<std::string> AllModuleNames;
 	for (auto& mod : m_LoadedModules)
 	{

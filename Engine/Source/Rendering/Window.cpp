@@ -3,6 +3,8 @@
 
 Window::Window(const std::string& name, int width, int height)
 {
+	PROFILE_FUNC()
+
 	glfwInit();
 	m_Window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
 
@@ -124,6 +126,8 @@ void Window::EndFrame()
 
 void Window::OnWindowResize(GLFWwindow* window, int width, int height)
 {
+	PROFILE_FUNC()
+
 	//dispatch resize event
  	EventWindowResized event;
 	event.NewSize = { width, height };
