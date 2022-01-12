@@ -16,6 +16,7 @@
 #include "Utils/ModuleUtils.h"
 #include "Utils/Paths.h"
 #include "Utils/VectorUtils.h"
+#include "Utils/FileSystem.h"
 
 //Event
 #include "Event/Callback.h"

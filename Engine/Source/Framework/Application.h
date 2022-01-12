@@ -43,9 +43,6 @@ public:
 		return m_AppState;
 	}
 
-	//do any register requests
-	void CompleteRegisterRequests() const;
-
 	void SetAppState(const AppState& state)
 	{
 		m_AppState = state;

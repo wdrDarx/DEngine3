@@ -22,25 +22,21 @@ public:
 	void TestMethod(const PropArray& args);
 };
 
-
-struct IntProperty : public Property, AutoRegister<IntProperty, GameFramework>
+struct FunctionProperty : public Property
 {
-	AUTO_REGISTER()
-	PROP_CLASS_DEF(IntProperty, int);
+	PROP_CLASS_DEF(FunctionProperty, std::function<void()>)
 
-	Buffer MakeValueBuffer(const void* ValuePtr) const override
+	Buffer MakeValueBuffer(const void* valuePtr) const override
 	{
 		Buffer out;
-		BufferWritter writter(out);
-		writter.Write(ValuePtr, sizeof(int));
+		
 		return out;
 	}
 
-	void ValueFromBuffer(void* TargetValuePtr, const Buffer& buffer) const override
+	void ValueFromBuffer(void* targetPtr, const Buffer& buffer) const override
 	{
-		BufferReader reader(buffer);
-		reader.Read(TargetValuePtr, sizeof(int));
+		
 	}
-
 };
+
 

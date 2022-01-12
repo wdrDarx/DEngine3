@@ -150,6 +150,7 @@ IF EXIST ..\..\bin\Runtime-windows-x86_64\GameFramework\GameFramework.dll\ (xcop
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Classes\TestAppObject.h" />
     <ClInclude Include="Source\GameFramework.h" />
   </ItemGroup>
   <ItemGroup>

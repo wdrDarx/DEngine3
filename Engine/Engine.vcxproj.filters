@@ -152,5 +152,6 @@
     <ClCompile Include="Source\UI\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Source\UI\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Source\UI\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="Source\Utils\ModuleUtils.cpp" />
   </ItemGroup>
 </Project>

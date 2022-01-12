@@ -18,6 +18,13 @@ void AllocateValue(void*& ptr) const override { ptr = new WrappingTypename; } \
 ThisClass(const std::string& name, Typename& value) : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { m_Value = &value; SetName(name); } \
 ThisClass() : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { };
 
+
+enum PropFlags
+{
+	NoSerialize = BIT(0),
+	EditAnywhere = BIT(1)
+};
+
 //pointer to existing value 
 struct Property
 {
@@ -79,7 +86,7 @@ public:
 		return m_Metadata;
 	}
 
-	std::string SetMetadata(const std::string& meta)
+	void SetMetadata(const std::string& meta)
 	{
 		m_Metadata = meta;
 	}
@@ -104,6 +111,11 @@ public:
 	int GetFlags() const
 	{
 		return m_Flags;
+	}
+
+	void SetFlags(int flags)
+	{
+		m_Flags = flags;
 	}
 
 	//Class type of the value of the prop
@@ -169,13 +181,39 @@ struct StaticProperty
 	//Gets pointer to raw value of this property by correctly deserializing the value, this pointer can be casted to the desired type
 	void* GetRawValue() const;
 
-
 	Buffer m_Data;
 	ClassType m_Type;
 	std::string m_Name;
 	std::string m_Metadata;
 	int m_Flags;
 };
+
+
+//Creates a property if the type passed in is registered with a prop type
+template<typename T>
+inline Property* CreatePropertyFromMember(T& memeber, const std::string& name, const std::string& metadata, int Flags)
+{
+	ClassType type(typeid(T));
+	PropertyRegistry& registry = GET_SINGLETON(PropertyRegistry);
+	for (auto& key : registry.GetRegisteredKeys())
+	{
+		Property* prop = registry.Make(key);
+		if (prop->GetValueType() == type) // check if prop value type matches the memeber type we got
+		{
+			prop->m_Value = &memeber; //set value ptr to the member
+			prop->SetName(name);
+			//prop->SetCategory()
+			prop->SetMetadata(metadata);
+			prop->SetFlags(Flags);
+			return prop;
+		}
+		else
+			delete prop; //no match so delete prop
+	}
+
+	LOG_ERROR("Tried to define property {0} with no registered property class!");
+	return nullptr;
+}
 
 
 struct PropArgDef

@@ -3,23 +3,24 @@
 #include "Core/Profiling.h"
 #include "Core/Log.h"
 #include "Utils/Thread.h"
+#include "Utils/ModuleUtils.h"
 #include "Framework/ClassType.h"
 
-#define REGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, ClassType(typeid(ObjectClass)), #ModuleClass});
-#define UNREGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, ClassType(typeid(ObjectClass)), #ModuleClass});
+#define REGISTER_OBJECT(ObjectClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, ClassType(typeid(ObjectClass)), GetCurrentModuleName()});
+#define UNREGISTER_OBJECT(ObjectClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, ClassType(typeid(ObjectClass)), GetCurrentModuleName()});
 
-#define REGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, ClassType(typeid(StructClass)), #ModuleClass});
-#define UNREGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, ClassType(typeid(StructClass)), #ModuleClass});
+#define REGISTER_STRUCT(StructClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, ClassType(typeid(StructClass)), GetCurrentModuleName()});
+#define UNREGISTER_STRUCT(StructClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, ClassType(typeid(StructClass)), GetCurrentModuleName()});
 
-#define REGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, ClassType(typeid(PropertyClass)), #ModuleClass});
-#define UNREGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, ClassType(typeid(PropertyClass)), #ModuleClass});
+#define REGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
+#define UNREGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
 
 //same as register struct
-#define REGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<EnumClass>({#EnumClass, ClassType(typeid(EnumClass)), #ModuleClass});
-#define UNREGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#EnumClass, ClassType(typeid(EnumClass)), #ModuleClass});
+#define REGISTER_ENUM(EnumClass) GET_SINGLETON(StructRegistry).Register<EnumClass>({#EnumClass, ClassType(typeid(EnumClass)), GetCurrentModuleName()});
+#define UNREGISTER_ENUM(EnumClass) GET_SINGLETON(StructRegistry).Unregister({#EnumClass, ClassType(typeid(EnumClass)), GetCurrentModuleName()});
 
-#define REGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, ClassType(typeid(AssetClass)), #ModuleClass});
-#define UNREGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, ClassType(typeid(AssetClass)), #ModuleClass});
+#define REGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
+#define UNREGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
 
 
 struct ObjectRegisterKey
@@ -200,6 +201,7 @@ DEFINE_SINGLETON(StructRegistry, Get_StructRegistry);
 DEFINE_SINGLETON(AssetRegistry, Get_AssetRegistry);
 DEFINE_SINGLETON(PropertyRegistry, Get_PropertyRegistry);
 
+#if 0 //DEPRECATED 
 struct RegisterRequestHolder
 {
 	//array of register functions
@@ -260,3 +262,4 @@ template<class T, class Module>
 bool AutoRegister<T, Module>::m_Dummy = AutoRegister<T, Module>::Register();
 
 #define AUTO_REGISTER() bool DoRegister() override { return true; }
+#endif

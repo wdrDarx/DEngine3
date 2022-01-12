@@ -24,6 +24,8 @@ void ImGuiLayer::Init(Window* window)
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	ImGui::SetCurrentContext(m_ImGuidContext);
 
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
+
 	ImGui_ImplGlfw_InitForOpenGL(window->GetGlfwWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 

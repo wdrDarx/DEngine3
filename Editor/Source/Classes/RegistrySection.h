@@ -26,7 +26,7 @@ public:
 		{
 			for (auto& reg : ObjectReg.GetRegisteredKeys())
 			{
-				std::string RegName =  reg.AssignedModuleName + "::" + reg.name;
+				std::string RegName = "(" + reg.AssignedModuleName + ") " + reg.name;
 				ImGui::Text(RegName.c_str());
 			}
 

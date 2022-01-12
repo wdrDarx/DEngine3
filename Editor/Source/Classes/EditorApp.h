@@ -29,6 +29,21 @@ public:
 		newSection->Init();
 	}
 
+	template<class T>
+	T* GetEditorSection()
+	{
+		FORCE_BASE_CLASS(T, EditorSection)
+
+		for (auto& sec : m_EditorSections)
+		{
+			if(Ref<T> ref = Cast<T>(sec))
+				return ref.get();
+		}
+
+		LOG_ERROR("No editor section '{0}' found!", ClassType(typeid(T)).Name);
+		return nullptr;
+	}
+
 
 	std::vector<Ref<Window>>& GetWindows()
 	{

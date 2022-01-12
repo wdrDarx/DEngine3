@@ -30,11 +30,6 @@ void BufferWritter::WriteBuffer(const Buffer& buffer)
 	WriteVec(buffer);
 }
 
-void BufferWritter::WriteClassType(const ClassType& type)
-{
-	Write(&type.typeIndex, sizeof(std::type_index));
-}
-
 void BufferReader::Read(void* data, size_t size)
 {
 	ReadOffset(m_CurrentOffset, data, size);
@@ -61,12 +56,6 @@ void BufferReader::ReadString(std::string& str)
 void BufferReader::ReadBuffer(Buffer& buffer)
 {
 	ReadVec(buffer);
-}
-
-void BufferReader::ReadClassType(ClassType& type)
-{
-	Read(&type.typeIndex, sizeof(std::type_index));
-	type.Name = type.GetFriendlyTypeName(type.typeIndex); //update the name
 }
 
 void BufferArray::FromBuffer(const Buffer& buffer)

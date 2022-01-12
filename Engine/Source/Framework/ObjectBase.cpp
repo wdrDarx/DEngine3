@@ -93,11 +93,11 @@ void ObjectBase::LoadPropsFromBuffer(const Buffer& buffer)
 	for (auto& piece : PropsArray.GetDataPieces())
 	{
 		Property prop;
-		prop.LoadAllMetadata(buffer); //only need to load the metadata for checking
+		prop.LoadAllMetadata(piece); //only need to load the metadata for checking
 
 		for (auto& p : GetProperties()) //search all current props for corresponding name and type
 		{	
-			if (p->GetName() == prop.GetName() && p->GetType() == prop.GetType()) 
+			if (p->GetName() == prop.GetName()) 
 			{
 				//Found the matching prop, now deserialize it 
 				p->FromBuffer(piece);

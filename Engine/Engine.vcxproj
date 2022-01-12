@@ -196,6 +196,7 @@
     <ClCompile Include="Source\UI\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Source\UI\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Source\Utils\FileSystem.cpp" />
+    <ClCompile Include="Source\Utils\ModuleUtils.cpp" />
     <ClCompile Include="Source\Utils\Paths.cpp" />
     <ClCompile Include="Source\Utils\Rand.cpp" />
   </ItemGroup>

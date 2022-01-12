@@ -4,9 +4,7 @@
 #include "ModulesSection.h"
 #include "RegistrySection.h"
 #include "AppObjectsSection.h"
-
-//property window
-#include "PropertyWindow.h"
+#include "PropertiesSection.h"
 
 
 EditorApp::EditorApp() : Application()
@@ -16,6 +14,8 @@ EditorApp::EditorApp() : Application()
 
 void EditorApp::Init()
 {
+	REGISTER_OBJECT(PropertyDrawTypes);
+
 	//create editor window
 	m_EditorWindow = CreateNewWindow("DEditor", { 1280, 720 });
 
@@ -28,17 +28,17 @@ void EditorApp::Init()
 	GetEditorWindow()->SetCurrentContext();
 	GetImGuiLayer().Init(m_EditorWindow.get());
 
+	//Create PropertyDrawTypes object
+	CreateAppObject<PropertyDrawTypes>();
+
 	//Create sections
 	CreateEditorSection<ModulesSection>(GetEditorWindow().get());
 	CreateEditorSection<RegistrySection>(GetEditorWindow().get());
 	CreateEditorSection<AppObjectsSection>(GetEditorWindow().get());
+	CreateEditorSection<PropertiesSection>(GetEditorWindow().get());
 
 	//bind to shutdown if the main window is closed
 	GetEditorWindow()->BindOnWindowClosed(m_EditorWindowCloseCallback);
-
-	//Create PropertyDrawTypes object
-	CreateAppObject<PropertyDrawTypes>();
-
 
 	//load all modules
 	GetModuleManager().LoadAllModules(Paths::GetModulesDirectory());
@@ -55,6 +55,10 @@ void EditorApp::OnUpdate(float DeltaSeconds)
 
 void EditorApp::RenderUI()
 {
+
+	//set the properties pannel selected object as the selected app object
+	GetEditorSection<PropertiesSection>()->m_ObjectToDraw = GetEditorSection<AppObjectsSection>()->m_SelectedObject;
+
 	//render all sections
 	for (auto& sec : GetEditorSections())
 		sec->Render();

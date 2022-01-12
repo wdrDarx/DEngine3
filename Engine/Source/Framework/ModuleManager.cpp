@@ -63,11 +63,15 @@ void ModuleManager::LoadModuleDLL(const std::string& ModuleDLLPath, const Module
 	mod->m_ModuleManager = this;
 	mod->m_App = m_App;
 	mod->SetMetadata(metadata);
-	mod->OnLoad();
 
-	EventModuleLoaded event;
-	event.ModuleName = mod->GetThisModuleName();
-	m_EventDispatcher.Dispatch(event);
+	//Call Onload the next frame for registry reasons
+	m_App->GetMainThread().ExecuteParams([&](Module* m)
+	{
+		m->OnLoad();
+		EventModuleLoaded event;
+		event.ModuleName = m->GetThisModuleName();
+		m_EventDispatcher.Dispatch(event);
+	}, mod);
 }
 
 void ModuleManager::LoadModuleFromName(const std::string& ModuleName, const std::string& SearchPath)
@@ -192,9 +196,7 @@ void ModuleManager::UnloadModule(const std::string& ModuleName)
 
 	ToUnload->OnUnload();
 	delete ToUnload;
-	m_LoadedModules.erase(ToUnloadIt);
-
-	
+	m_LoadedModules.erase(ToUnloadIt);	
 }
 
 void ModuleManager::UnloadAllModules()
