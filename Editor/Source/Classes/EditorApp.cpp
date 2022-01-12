@@ -3,6 +3,11 @@
 //Sections
 #include "ModulesSection.h"
 #include "RegistrySection.h"
+#include "AppObjectsSection.h"
+
+//property window
+#include "PropertyWindow.h"
+
 
 EditorApp::EditorApp() : Application()
 {
@@ -29,9 +34,13 @@ void EditorApp::Init()
 	//Create sections
 	CreateEditorSection<ModulesSection>(GetEditorWindow().get());
 	CreateEditorSection<RegistrySection>(GetEditorWindow().get());
+	CreateEditorSection<AppObjectsSection>(GetEditorWindow().get());
 
 	//bind to shutdown if the main window is closed
 	GetEditorWindow()->BindOnWindowClosed(m_EditorWindowCloseCallback);
+
+	//Create PropertyDrawTypes object
+	CreateAppObject<PropertyDrawTypes>();
 }
 
 void EditorApp::OnUpdate(float DeltaSeconds)

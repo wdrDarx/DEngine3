@@ -11,6 +11,8 @@ void GameFramework::OnLoad()
 	}
 
 	LOG_WARN("Loaded Module : " + std::string(GetCurrentModuleName()));
+
+	GetApplication()->CreateAppObject<AppObject>();
 }
 
 void GameFramework::TestMethod(const PropArray& args)

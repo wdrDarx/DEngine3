@@ -43,6 +43,9 @@ public:
 		return m_AppState;
 	}
 
+	//do any register requests
+	void CompleteRegisterRequests() const;
+
 	void SetAppState(const AppState& state)
 	{
 		m_AppState = state;
@@ -190,7 +193,7 @@ private:
 			//Auto unregister any keys associated with module
 			ObjectRegistry& ObjectReg = GET_SINGLETON(ObjectRegistry);
 			StructRegistry& StructReg = GET_SINGLETON(StructRegistry);
-			PropertyRegistery& PropReg = GET_SINGLETON(PropertyRegistery);
+			PropertyRegistry& PropReg = GET_SINGLETON(PropertyRegistry);
 			AssetRegistry& AssetReg = GET_SINGLETON(AssetRegistry);
 
 			for (auto& reg : ObjectReg.GetRegisteredKeys())

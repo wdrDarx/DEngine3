@@ -1,5 +1,6 @@
 #include "ObjectBase.h"
 #include "Utils/Rand.h"
+#include "Utils/ModuleUtils.h"
 
 void ObjectBase::Initialize(const ObjectInitializer& initializer)
 {
@@ -106,18 +107,7 @@ void ObjectBase::LoadPropsFromBuffer(const Buffer& buffer)
 	}
 }
 
-ObjectInitializer ObjectInitializer::Module(ObjectBase* ExistantModuleObject)
+ObjectInitializer::ObjectInitializer()
 {
-	ASSERT(ExistantModuleObject);
-
-	ObjectInitializer init;
-	init.AssociatedModuleName = ExistantModuleObject->GetAssociatedModuleName();
-	return init;
-}
-
-ObjectInitializer ObjectInitializer::Module(const std::string& AssociatedModuleName)
-{
-	ObjectInitializer init;
-	init.AssociatedModuleName = AssociatedModuleName;
-	return init;
+	AssociatedModuleName = GetCurrentModuleName();
 }

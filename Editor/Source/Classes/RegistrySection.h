@@ -19,7 +19,7 @@ public:
 
 		ObjectRegistry& ObjectReg = GET_SINGLETON(ObjectRegistry);
 		StructRegistry& StructReg = GET_SINGLETON(StructRegistry);
-		PropertyRegistery& PropReg = GET_SINGLETON(PropertyRegistery);
+		PropertyRegistry& PropReg = GET_SINGLETON(PropertyRegistry);
 		AssetRegistry& AssetReg = GET_SINGLETON(AssetRegistry);
 
 		if (ImGui::TreeNode("Objects"))

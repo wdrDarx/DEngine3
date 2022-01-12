@@ -58,7 +58,7 @@ void* StaticProperty::GetRawValue() const
 {
 	PROFILE_FUNC()
 
-	PropertyRegistery& registry = GET_SINGLETON(PropertyRegistery);
+	PropertyRegistry& registry = GET_SINGLETON(PropertyRegistry);
 	for (auto& reg : registry.GetRegisteredKeys())
 	{
 		//create temporary prop to call virtual functions

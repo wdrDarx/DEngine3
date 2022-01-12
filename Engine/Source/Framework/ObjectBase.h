@@ -45,36 +45,28 @@ struct ObjectInitializer
 	//Construct flags
 	int Flags = 0;
 
-	// Will copy the associated module name from the passed in object into the returning object initializer
-	static ObjectInitializer Module(ObjectBase* ExistantModuleObject);
+	ObjectInitializer(const std::string& name, ConstructFlags flags) : ObjectInitializer()
+	{
+		Name = name;
+		Flags = flags;
+	}
 
-	//create an instance with an associated module name
-	static ObjectInitializer Module(const std::string& AssociatedModuleName);
+	ObjectInitializer(const std::string& name) : ObjectInitializer()
+	{
+		Name = name;
+	}
 
-	ObjectInitializer(const std::string& name, ConstructFlags flags) : Name(name), Flags(flags)
+	ObjectInitializer(ConstructFlags flags) : ObjectInitializer((int)flags)
 	{
 
 	}
 
-	ObjectInitializer(const std::string& name) : Name(name)
+	ObjectInitializer(int flags) : ObjectInitializer()
 	{
-
+		Flags = flags;
 	}
 
-	ObjectInitializer(ConstructFlags flags) : Flags(flags)
-	{
-
-	}
-
-	ObjectInitializer(int flags) : Flags(flags)
-	{
-
-	}
-
-	ObjectInitializer()
-	{
-
-	}
+	ObjectInitializer();
 };
 
 

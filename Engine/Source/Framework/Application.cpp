@@ -27,6 +27,20 @@ void Application::OnUpdate(float DeltaTime)
 	}
 }
 
+
+void Application::CompleteRegisterRequests() const
+{
+	PROFILE_FUNC("Register Requests")
+
+	RegisterRequestHolder& holder = GET_SINGLETON(RegisterRequestHolder);
+
+	//execute the requests
+	for(auto& req : holder.m_RegisterQueue)
+	{ 
+		req();
+	}
+}
+
 void Application::CoreUpdate(float DeltaTime)
 {
 	//NOTE: window start and end frame needs to be called manually because an app can have no window
@@ -34,6 +48,9 @@ void Application::CoreUpdate(float DeltaTime)
 	m_LastTick = tick;
 
 	OnUpdate(DeltaTime);
+
+	//do all register requests
+	CompleteRegisterRequests();
 
 	//Complete all tasks the virtual thread
 	PROFILE_FUNC("Main Thread Tasks")

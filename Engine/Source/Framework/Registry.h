@@ -10,8 +10,8 @@
 #define REGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, #ModuleClass});
 #define UNREGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, #ModuleClass});
 
-#define REGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistery).Register<PropertyClass>({#PropertyClass, #ModuleClass});
-#define UNREGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistery).Unregister({#PropertyClass, #ModuleClass});
+#define REGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, #ModuleClass});
+#define UNREGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, #ModuleClass});
 
 //same as register struct
 #define REGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<EnumClass>({#EnumClass, #ModuleClass});
@@ -196,12 +196,20 @@ struct Property;
 using ObjectRegistry = _RegistryBase<ObjectRegisterKey, ObjectBase>;
 using StructRegistry = _RegistryBase<StructRegisterKey, StructBase>;
 using AssetRegistry = _RegistryBase<AssetRegisterKey, Asset>;
-using PropertyRegistery = _RegistryBase<PropertyRegisterKey, Property>;
+using PropertyRegistry = _RegistryBase<PropertyRegisterKey, Property>;
 
 DEFINE_SINGLETON(ObjectRegistry, Get_ObjectRegistry);
 DEFINE_SINGLETON(StructRegistry, Get_StructRegistry);
 DEFINE_SINGLETON(AssetRegistry, Get_AssetRegistry);
-DEFINE_SINGLETON(PropertyRegistery, Get_PropertyRegistery);
+DEFINE_SINGLETON(PropertyRegistry, Get_PropertyRegistry);
+
+struct RegisterRequestHolder
+{
+	//array of register functions
+	std::vector<std::function<void()>> m_RegisterQueue;
+};
+
+DEFINE_SINGLETON(RegisterRequestHolder, Get_RegisterRequestHolder);
 
 template<class T, class Module>
 struct AutoRegister
@@ -216,20 +224,12 @@ struct AutoRegister
 
 		static bool Register()
 		{
-			ClassType type(typeid(T));
-			ClassType module(typeid(Module));
-
-			auto& app = GET_SINGLETON(Engine).GetApplication();
-			if(!app) return true;
-
-			//	the actual module that this is being called from is loaded as a dll, but not officially "loaded" in the engine.
-			//	this loading requires the rest of this engine tick, which we delay here by executing the rest of the register 
-			//	logic on the next tick of the application
-			app->GetMainThread().ExecuteParams([&](ClassType type, ClassType module)
+			ClassType t(typeid(T));
+			ClassType m(typeid(Module));
+			//push a request to register, these will be done by the application when its ready
+			GET_SINGLETON(RegisterRequestHolder).m_RegisterQueue.push_back(std::bind([&](ClassType type, ClassType module)
 			{
-				PROFILE_FUNC("Register Invoke")
-
-				if(!IsModuleLoaded(module.Name)) return; // dont register if this module isnt loaded
+				if (!IsModuleLoaded(module.Name)) return; // dont register if this module isnt loaded
 
 				if constexpr (std::is_base_of<ObjectBase, T>::value)
 				{
@@ -243,9 +243,15 @@ struct AutoRegister
 
 				if constexpr (std::is_base_of<Property, T>::value)
 				{
-					GET_SINGLETON(PropertyRegistery).Register<T>({ type.Name , module.Name });
-				}	
-			}, type, module);
+					GET_SINGLETON(PropertyRegistry).Register<T>({ type.Name , module.Name });
+				}		
+
+// 				if constexpr (std::is_base_of<Asset, T>::value)
+// 				{
+// 					GET_SINGLETON(AssetRegistry).Register<T>({ type.Name , module.Name });
+// 				}
+
+			}, t, m));
 
 			return true;
 		}

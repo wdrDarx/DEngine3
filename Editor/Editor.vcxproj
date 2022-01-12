@@ -154,9 +154,11 @@ IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Runtime-w
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Classes\AppObjectsSection.h" />
     <ClInclude Include="Source\Classes\ModulesSection.h" />
     <ClInclude Include="Source\Classes\EditorSection.h" />
     <ClInclude Include="Source\Classes\EditorApp.h" />
+    <ClInclude Include="Source\Classes\PropertyWindow.h" />
     <ClInclude Include="Source\Classes\RegistrySection.h" />
   </ItemGroup>
   <ItemGroup>

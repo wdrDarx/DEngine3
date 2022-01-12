@@ -140,7 +140,7 @@ struct StaticProperty
 		StaticProperty out;
 		out.m_Name = name;
 		out.m_Type = ClassType(typeid(value));
-		PropertyRegistery& registry = GET_SINGLETON(PropertyRegistery);
+		PropertyRegistry& registry = GET_SINGLETON(PropertyRegistry);
 		for (auto& key : registry.GetRegisteredKeys())
 		{
 			Property* prop = registry.Make(key);
