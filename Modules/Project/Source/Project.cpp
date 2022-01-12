@@ -2,8 +2,6 @@
 
 void Project::OnLoad()
 {
-	//assign App
-	Module::AssignApplication(GetApplication());
 
 	if (!gladLoadGL())
 	{

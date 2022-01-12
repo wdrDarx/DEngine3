@@ -8,7 +8,8 @@ Buffer Property::MakeBuffer() const
 	Buffer out;
 	BufferWritter writter(out);
 	writter.WriteString(m_Name);
-	writter.WriteClassType(m_Type); //typename of this property
+	writter.WriteClassType(m_Type); //Type of this property
+	writter.WriteClassType(m_ValueType); //Type of value of this property
 	writter.WriteString(m_Metadata);
 	writter.Write(&m_Flags, sizeof(int));
 	writter.WriteVec(MakeValueBuffer(m_Value)); // serialized value
@@ -22,7 +23,8 @@ void Property::FromBuffer(const Buffer& buffer)
 
 	BufferReader reader(buffer);
 	reader.ReadString(m_Name);
-	reader.ReadClassType(m_Type); //typename of this property
+	reader.ReadClassType(m_Type); //Type of this property
+	reader.ReadClassType(m_ValueType); //Type of value of this property
 	reader.ReadString(m_Metadata);
 	reader.Read(&m_Flags, sizeof(int));
 	Buffer buf;
@@ -38,7 +40,8 @@ void Property::LoadAllMetadata(const Buffer& buffer)
 
 	BufferReader reader(buffer);
 	reader.ReadString(m_Name);
-	reader.ReadClassType(m_Type); //typename of this property
+	reader.ReadClassType(m_Type); //Type of this property
+	reader.ReadClassType(m_ValueType); //Type of value of this property
 	reader.ReadString(m_Metadata);
 	reader.Read(&m_Flags, sizeof(int));
 }

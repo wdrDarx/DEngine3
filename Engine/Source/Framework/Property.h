@@ -15,20 +15,20 @@ if(typeid(member) == typeid(float)) { out = new FloatProperty(member); } \
 using Typename = WrappingTypename; \
 using ThisClass = class; \
 void AllocateValue(void*& ptr) const override { ptr = new WrappingTypename; } \
-ThisClass(const std::string& name, Typename& value) : Property(ClassType(typeid(Typename))) { m_Value = &value;	SetName(name); } \
-ThisClass() : Property(ClassType(typeid(Typename))) { };
+ThisClass(const std::string& name, Typename& value) : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { m_Value = &value; SetName(name); } \
+ThisClass() : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { };
 
 //pointer to existing value 
 struct Property
 {
 public:
 
-	Property(const ClassType& type) : m_Type(type)
+	Property(const ClassType& type, const ClassType& ValueType) : m_ValueType(ValueType), m_Type(type)
 	{
 
 	}
 
-	Property() : m_Type(ClassType(typeid(void)))
+	Property() : m_ValueType(ClassType(typeid(void))), m_Type(typeid(Property))
 	{
 
 	}
@@ -90,6 +90,12 @@ public:
 	}
 
 	//the type points to an actual C type e.g float
+	const ClassType& GetValueType() const
+	{
+		return m_ValueType;
+	}
+
+	//the type points to the class of this property
 	const ClassType& GetType() const
 	{
 		return m_Type;
@@ -100,7 +106,12 @@ public:
 		return m_Flags;
 	}
 
+	//Class type of the value of the prop
+	ClassType m_ValueType;
+
+	//Class Type of the class of the prop
 	ClassType m_Type;
+
 	std::string m_Name;
 	std::string m_Metadata;
 	int m_Flags;
@@ -144,7 +155,7 @@ struct StaticProperty
 		for (auto& key : registry.GetRegisteredKeys())
 		{
 			Property* prop = registry.Make(key);
-			if (prop->GetType().typeIndex == typeid(T))
+			if (prop->GetValueType().typeIndex == typeid(T))
 			{
 				out.m_Data = prop->MakeValueBuffer(&value);
 				delete prop; //property class has done its job

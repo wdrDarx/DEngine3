@@ -1,6 +1,7 @@
 #pragma once
 #include "ObjectBase.h"
 #include "Framework/FrameworkMacros.h"
+#include "Framework/ModuleManager.h"
 
 class Application;
 /*
@@ -54,6 +55,9 @@ public:
 	}
 
 private:
+
+	Callback<EventModuleUnloaded> m_EventModuleUnloaded;
+
 	Application* m_Application = nullptr;
 	Tick m_LastTick;
 };

@@ -184,7 +184,6 @@
     <ClCompile Include="Source\Framework\AppObject.cpp" />
     <ClCompile Include="Source\Framework\Application.cpp" />
     <ClCompile Include="Source\Framework\Engine.cpp" />
-    <ClCompile Include="Source\Framework\Module.cpp" />
     <ClCompile Include="Source\Framework\ModuleManager.cpp" />
     <ClCompile Include="Source\Framework\ObjectBase.cpp" />
     <ClCompile Include="Source\Framework\Property.cpp" />

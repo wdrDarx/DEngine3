@@ -1,16 +1,21 @@
 #include "GameFramework.h"
+#include "../../Editor/Source/Classes/PropertyWindow.h"
 
 void GameFramework::OnLoad()
 {
-	//assign App
-	Module::AssignApplication(GetApplication());
-
 	if (!gladLoadGL())
 	{
 		//std::cout << "Failed to initialize OpenGL context" << std::endl;
 	}
 
 	LOG_WARN("Loaded Module : " + std::string(GetCurrentModuleName()));
+
+
+
+	GetApplication()->GetAppObject<PropertyDrawTypes>()->AddDrawMethod<IntProperty>([&]()
+	{
+		ImGui::Text("sus");	
+	});
 
 	GetApplication()->CreateAppObject<AppObject>();
 }
@@ -19,7 +24,6 @@ void GameFramework::TestMethod(const PropArray& args)
 {
 	
 }
-
 
 void GameFramework::OnUnload()
 {

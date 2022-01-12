@@ -24,9 +24,6 @@ void EditorApp::Init()
 	//create base dirs
 	Paths::CreateBaseDirs();
 
-	//load all modules
-	GetModuleManager().LoadAllModules(Paths::GetModulesDirectory());
-
 	//init imgui layer on the editor window
 	GetEditorWindow()->SetCurrentContext();
 	GetImGuiLayer().Init(m_EditorWindow.get());
@@ -41,6 +38,10 @@ void EditorApp::Init()
 
 	//Create PropertyDrawTypes object
 	CreateAppObject<PropertyDrawTypes>();
+
+
+	//load all modules
+	GetModuleManager().LoadAllModules(Paths::GetModulesDirectory());
 }
 
 void EditorApp::OnUpdate(float DeltaSeconds)

@@ -43,16 +43,6 @@ public:
 		return m_App;
 	}
 
-	static Ref<Application> GetStaticApplication()
-	{
-		return s_App;
-	}
-
-	static void AssignApplication(Ref<Application> app)
-	{
-		s_App = app;
-	}
-
 	template<typename T>
 	T* GetModule()
 	{
@@ -94,7 +84,4 @@ public:
 	ModuleManager* m_ModuleManager = nullptr;
 	Ref<Application> m_App;
 	ModuleMetadata m_MetaData;
-
-	//static app ref
-	static Ref<Application> s_App;
 };

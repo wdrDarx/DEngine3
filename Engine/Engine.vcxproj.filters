@@ -122,9 +122,6 @@
     <ClCompile Include="Source\Framework\Engine.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Framework\Module.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Framework\ModuleManager.cpp">
       <Filter>Framework</Filter>
     </ClCompile>

@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 
+
 //contains type info and friendly name of a class
 struct ClassType
 {
@@ -10,6 +11,11 @@ struct ClassType
 	bool operator==(const ClassType& other) const
 	{
 		return other.typeIndex == typeIndex;
+	}
+
+	bool operator<(const ClassType& rhs) const
+	{
+		return typeIndex < rhs.typeIndex;
 	}
 
 	static std::string GetFriendlyTypeName(const std::type_index& index)
@@ -41,3 +47,19 @@ struct ClassType
 	}
 
 };
+
+namespace std
+{
+	template <>
+	struct hash<ClassType>
+	{
+		std::size_t operator()(const ClassType& k) const
+		{
+			using std::size_t;
+			using std::hash;
+			using std::type_index;
+
+			return hash<std::type_index>()(k.typeIndex);
+		}
+	};
+}

@@ -3,32 +3,34 @@
 #include "Core/Profiling.h"
 #include "Core/Log.h"
 #include "Utils/Thread.h"
+#include "Framework/ClassType.h"
 
-#define REGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, #ModuleClass});
-#define UNREGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, #ModuleClass});
+#define REGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, ClassType(typeid(ObjectClass)), #ModuleClass});
+#define UNREGISTER_OBJECT(ObjectClass, ModuleClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, ClassType(typeid(ObjectClass)), #ModuleClass});
 
-#define REGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, #ModuleClass});
-#define UNREGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, #ModuleClass});
+#define REGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, ClassType(typeid(StructClass)), #ModuleClass});
+#define UNREGISTER_STRUCT(StructClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, ClassType(typeid(StructClass)), #ModuleClass});
 
-#define REGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, #ModuleClass});
-#define UNREGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, #ModuleClass});
+#define REGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, ClassType(typeid(PropertyClass)), #ModuleClass});
+#define UNREGISTER_PROPERTY(PropertyClass, ModuleClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, ClassType(typeid(PropertyClass)), #ModuleClass});
 
 //same as register struct
-#define REGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<EnumClass>({#EnumClass, #ModuleClass});
-#define UNREGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#EnumClass, #ModuleClass});
+#define REGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Register<EnumClass>({#EnumClass, ClassType(typeid(EnumClass)), #ModuleClass});
+#define UNREGISTER_ENUM(EnumClass, ModuleClass) GET_SINGLETON(StructRegistry).Unregister({#EnumClass, ClassType(typeid(EnumClass)), #ModuleClass});
 
-#define REGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, #ModuleClass});
-#define UNREGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, #ModuleClass});
+#define REGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, ClassType(typeid(AssetClass)), #ModuleClass});
+#define UNREGISTER_ASSETCLASS(AssetClass, ModuleClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, ClassType(typeid(AssetClass)), #ModuleClass});
 
 
 struct ObjectRegisterKey
 {
 	std::string name;
+	ClassType Type;
 	std::string AssignedModuleName;
 
 	bool operator==(const ObjectRegisterKey& other) const
 	{
-		return (name == other.name && AssignedModuleName == other.AssignedModuleName);
+		return (name == other.name && AssignedModuleName == other.AssignedModuleName && Type == other.Type);
 	}
 };
 
@@ -36,11 +38,12 @@ struct ObjectRegisterKey
 struct StructRegisterKey
 {
 	std::string name;
+	ClassType Type;
 	std::string AssignedModuleName;
 
 	bool operator==(const StructRegisterKey& other) const
 	{
-		return (name == other.name && AssignedModuleName == other.AssignedModuleName);
+		return (name == other.name && AssignedModuleName == other.AssignedModuleName && Type == other.Type);
 	}
 };
 
@@ -53,12 +56,9 @@ namespace std
 	{
 		std::size_t operator()(const ObjectRegisterKey& k) const
 		{
-			using std::size_t;
-			using std::hash;
-			using std::string;
-
-			return hash<std::string>()(k.name)
-				^ (hash<string>()(k.AssignedModuleName) << 1);
+			size_t out = 0;
+			hash_combine(out, k.name, k.AssignedModuleName, k.Type);
+			return out;
 		}
 	};
 
@@ -67,12 +67,9 @@ namespace std
 	{
 		std::size_t operator()(const StructRegisterKey& k) const
 		{
-			using std::size_t;
-			using std::hash;
-			using std::string;
-
-			return hash<std::string>()(k.name)
-				^ (hash<string>()(k.AssignedModuleName) << 1);
+			size_t out = 0;
+			hash_combine(out, k.name, k.AssignedModuleName, k.Type);
+			return out;
 		}
 	};
 
@@ -233,17 +230,17 @@ struct AutoRegister
 
 				if constexpr (std::is_base_of<ObjectBase, T>::value)
 				{
-					GET_SINGLETON(ObjectRegistry).Register<T>({ type.Name , module.Name });
+					GET_SINGLETON(ObjectRegistry).Register<T>({ type.Name , type, module.Name });
 				}
 
 				if constexpr (std::is_base_of<StructBase, T>::value)
 				{
-					GET_SINGLETON(StructRegistry).Register<T>({ type.Name , module.Name });
+					GET_SINGLETON(StructRegistry).Register<T>({ type.Name , type, module.Name });
 				}
 
 				if constexpr (std::is_base_of<Property, T>::value)
 				{
-					GET_SINGLETON(PropertyRegistry).Register<T>({ type.Name , module.Name });
+					GET_SINGLETON(PropertyRegistry).Register<T>({ type.Name , type, module.Name });
 				}		
 
 // 				if constexpr (std::is_base_of<Asset, T>::value)

@@ -39,6 +39,8 @@ void Application::CompleteRegisterRequests() const
 	{ 
 		req();
 	}
+
+	holder.m_RegisterQueue.clear();
 }
 
 void Application::CoreUpdate(float DeltaTime)
