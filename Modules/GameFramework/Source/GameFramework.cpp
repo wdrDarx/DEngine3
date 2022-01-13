@@ -23,6 +23,8 @@ void GameFramework::OnLoad()
 	REGISTER_STRUCT(TestStruct);
 	REGISTER_STRUCT(TestStruct2);
 
+	REGISTER_ENUM(EnumTest);
+
 	GetApplication()->GetAppObject<PropertyDrawTypes>()->AddDrawMethod<FunctionProperty>([&](ImGuiContext* context, Property* prop)
 	{
 		ImGui::SetCurrentContext(context);

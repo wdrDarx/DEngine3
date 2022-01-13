@@ -10,10 +10,11 @@
 #define PROP_CLASS_DEF(class, WrappingTypename) \
 using Typename = WrappingTypename; \
 using ThisClass = class; \
-void AllocateValue(void*& ptr) const override { ptr = new WrappingTypename; } \
 ThisClass(const std::string& name, Typename& value) : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { m_Value = &value; SetName(name); } \
 ThisClass() : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { }; \
  bool operator==(const Property& other) const override { return (*(Typename*)GetValue()) == (*(Typename*)other.GetValue()); }
+
+ #define PROP_DEFAULT_ALLOCATE() void AllocateValue(void*& ptr) const override { ptr = new Typename(); } 
 
 
 enum PropFlags
@@ -26,6 +27,8 @@ enum PropFlags
 struct Property
 {
 public:
+
+	using Typename = bool;
 
 	Property(const ClassType& type, const ClassType& ValueType) : m_ValueType(ValueType), m_Type(type)
 	{
@@ -48,6 +51,11 @@ public:
 		return false;
 	}
 
+	virtual bool IsMatchingValueType(void* ValuePtr, const ClassType& ValueType) const
+	{
+		return ValueType == GetValueType();
+	}
+
 	//entire property
 	Buffer MakeBuffer() const;
 
@@ -59,7 +67,7 @@ public:
 	//Allocated a pointer with the correct type e.g StringProperty will allocate a std::string*
 	virtual void AllocateValue(void*& ptr) const
 	{
-
+		ptr = new Typename();
 	}
 
 	//Creates a buffer from a value ptr, pointer type must match property type
@@ -218,16 +226,16 @@ struct StaticProperty : public Property
 
 //Creates a property if the type passed in is registered with a prop type
 template<typename T>
-inline Ref<Property> CreatePropertyFromMember(T& memeber, const std::string& name, const std::string& metadata, int Flags)
+inline Ref<Property> CreatePropertyFromMember(T& member, const std::string& name, const std::string& metadata, int Flags)
 {
 	ClassType type(typeid(T));
 	PropertyRegistry& registry = GET_SINGLETON(PropertyRegistry);
 	for (auto& key : registry.GetRegisteredKeys())
 	{
 		Ref<Property> prop = ToRef<Property>(registry.Make(key));
-		if (prop->GetValueType() == type || ( ClassUtils::IsStruct(prop->GetValueType())  && ClassUtils::IsStruct(type)) ) // check if prop value type matches the memeber type we got
+		if (prop->IsMatchingValueType(&member, type)) // check if prop value type matches the memeber type we got
 		{
-			prop->m_Value = &memeber; //set value ptr to the member
+			prop->m_Value = &member; //set value ptr to the member
 			prop->SetName(name);
 			//prop->SetCategory()
 			prop->SetMetadata(metadata);

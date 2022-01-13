@@ -25,6 +25,28 @@ public:
 		TestStruct OsuSus;
 };
 
+struct GAMEFRAMEWORK EnumTest : public EnumBase
+{
+	enum Enum
+	{
+		Layer_0 = BIT(1),
+		Layer_1 = BIT(2),
+		Layer_2 = BIT(3),
+		Layer_3 = BIT(4),
+		Layer_4 = BIT(5),
+		Layer_5 = BIT(6)
+	};
+
+	ENUM_DEF_BEGIN(EnumTest, Enum)
+		ENUM_DEF(Layer_0);
+		ENUM_DEF(Layer_1);
+		ENUM_DEF(Layer_2);
+		ENUM_DEF(Layer_3);
+		ENUM_DEF(Layer_4);
+		ENUM_DEF(Layer_5);
+	ENUM_DEF_END()
+};
+
 class GAMEFRAMEWORK TestAppObject : public AppObject
 {
 	public:
@@ -35,6 +57,7 @@ class GAMEFRAMEWORK TestAppObject : public AppObject
 			PROPDEF(TestFloat, EditAnywhere)
 			PROPDEF(TestString, EditAnywhere)
 			PROPDEF(TestClass, EditAnywhere)
+			PROPDEF(TestEnum, EditAnywhere)
 			PROPDEF(testStruct, EditAnywhere)
 			PROPDEF(testStruct2, EditAnywhere)
 			PROPDEF(SaveMeToFile, EditAnywhere)
@@ -52,6 +75,7 @@ class GAMEFRAMEWORK TestAppObject : public AppObject
 		float TestFloat = 69.f;
 		std::string TestString = "Osu sus";
 
+		EnumTest TestEnum;
 		TestStruct testStruct;
 		TestStruct2 testStruct2;
 

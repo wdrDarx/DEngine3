@@ -38,7 +38,6 @@ struct ObjectInitializer
 
 	/*  
 		optional name of associated module of this object (used mainly for auto deleting objects when a module gets unloaded)
-		WILL OVERRIDE m_AssociatedModuleName WHEN AN OBJECT IS INITIALIZED WITH THIS
     */
 	std::string AssociatedModuleName;
 
@@ -218,14 +217,9 @@ public:
 		return m_ObjectInitializer;
 	}
 
-	void SetAssociatedModuleName(const std::string& name)
-	{
-		m_AssociatedModuleName = name;
-	}
-
 	const std::string& GetAssociatedModuleName() const
 	{
-		return m_AssociatedModuleName;
+		return GetObjectInitializer().AssociatedModuleName;
 	}
 
 	//true if Initialize() has been called
@@ -266,9 +260,6 @@ private:
 
 	//copy of the initializer that has been used when initializing
 	ObjectInitializer m_ObjectInitializer;
-
-	//WILL GET OVERRIDEN BY THE OBJECT INITIALIZER
-	std::string m_AssociatedModuleName;
 
 	//unique assignable ID
 	UID m_ID;

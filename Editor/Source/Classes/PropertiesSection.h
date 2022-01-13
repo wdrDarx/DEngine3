@@ -13,6 +13,7 @@ public:
 	void Init() override
 	{
 		m_PropertyPannel = MakeRef<PropertyPannel>(GetEditorApp());
+		GetEditorApp()->GetModuleManager().BindOnModuleUnloaded(m_ModuleUnloadCallback);
 
 		GetEditorApp()->GetAppObject<PropertyDrawTypes>()->AddDrawMethod<IntProperty>([&](ImGuiContext* context, Property* prop)
 		{
@@ -55,15 +56,28 @@ public:
 			}
 		});
 
+		GetEditorApp()->GetAppObject<PropertyDrawTypes>()->AddDrawMethod<EnumProperty>([&](ImGuiContext* context, Property* prop)
+		{
+			EnumProperty* EnumToDraw = (EnumProperty*)prop->GetValue();
+			ImGui::Text("This is an enum");
+		});
+
 	}
 
 	void OnObjectChanged()
 	{
 		if (auto Object = m_ObjectToDraw.Get())
 		{
-			ObjectRegistry& reg = GET_SINGLETON(ObjectRegistry);
-			m_DefaultObject = ToRef<ObjectBase>(reg.MakeObjectFromClassName(m_ObjectToDraw.Get()->GetClassType().Name));
-			m_DefaultObject->DefineProperties();
+			if(Object)
+			{ 
+				ObjectRegistry& reg = GET_SINGLETON(ObjectRegistry);
+				ObjectBase* ptr = reg.MakeObjectFromClassName(Object->GetClassType().Name);
+				if(ptr)
+				{ 
+					m_DefaultObject = ToRef<ObjectBase>(ptr);
+					m_DefaultObject->DefineProperties();
+				}
+			}
 		}
 	}
 
@@ -87,6 +101,12 @@ public:
 
 	SafeObjectPtr<ObjectBase> m_ObjectToDraw = nullptr;
 	SafeObjectPtr<ObjectBase> m_LastObject = nullptr;
+
+	Callback<EventModuleUnloaded> m_ModuleUnloadCallback = [&](EventModuleUnloaded& event)
+	{
+		if(m_DefaultObject && event.ModuleName == m_DefaultObject->GetAssociatedModuleName())
+			m_DefaultObject = nullptr;
+	};
 
 	Ref<ObjectBase> m_DefaultObject = nullptr;
 };

@@ -18,10 +18,6 @@ void ObjectBase::Initialize(const ObjectInitializer& initializer)
 	else
 		m_Name = initializer.Name;
 
-	//override AssociatedModuleName 
-	if(!initializer.AssociatedModuleName.empty())
-		SetAssociatedModuleName(initializer.AssociatedModuleName);
-
 	//assign random ID
 	if (initializer.Flags & ConstructFlags::RANDOMID)
 	{

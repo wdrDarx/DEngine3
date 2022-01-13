@@ -37,5 +37,7 @@ class ClassUtils
 		//returns if an Struct inherits from another Object, (this is very slow so dont call it too much, its better to do a cast)
 		static bool IsStructBaseOf(const Ref<StructBase>& child, const Ref<StructBase>& parent);
 
-		
+
+		//returns if the type is an Enum
+		static bool IsEnum(const ClassType& type);		
 };

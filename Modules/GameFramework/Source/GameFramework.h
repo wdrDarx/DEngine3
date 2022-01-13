@@ -50,6 +50,7 @@ struct Function
 struct FunctionProperty : public Property
 {
 	PROP_CLASS_DEF(FunctionProperty, Function)
+	PROP_DEFAULT_ALLOCATE()
 
 	Buffer MakeValueBuffer(const void* valuePtr) const override
 	{
@@ -103,6 +104,7 @@ struct ObjectClass
 struct ObjectClassProperty : public Property
 {
 	PROP_CLASS_DEF(ObjectClassProperty, ObjectClass)
+	PROP_DEFAULT_ALLOCATE()
 
 	Buffer MakeValueBuffer(const void* valuePtr) const override
 	{

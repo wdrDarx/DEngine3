@@ -100,3 +100,17 @@ bool ClassUtils::IsStructBaseOf(const Ref<StructBase>& child, const Ref<StructBa
 	return IsStructBaseOf(child.get(), parent.get());
 }
 
+bool ClassUtils::IsEnum(const ClassType& type)
+{
+	if (type.Name == "EnumBase") return true;
+
+	EnumRegistry& reg = GET_SINGLETON(EnumRegistry);
+	for (auto& key : reg.GetRegisteredKeys())
+	{
+		if (key.name == type.Name)
+			return true;
+	}
+
+	return false;
+}
+

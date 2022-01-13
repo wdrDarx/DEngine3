@@ -38,6 +38,7 @@ void Application::RegisterBaseClasses() const
 	REGISTER_PROPERTY(IntProperty);
 	REGISTER_PROPERTY(BoolProperty);
 	REGISTER_PROPERTY(StructProperty);
+	REGISTER_PROPERTY(EnumProperty);
 
 	//Objects
 	REGISTER_OBJECT(ObjectBase);

@@ -155,6 +155,7 @@
     <ClInclude Include="Source\Framework\ClassType.h" />
     <ClInclude Include="Source\Framework\Classes\Properties\PropertyClasses.h" />
     <ClInclude Include="Source\Framework\Engine.h" />
+    <ClInclude Include="Source\Framework\EnumBase.h" />
     <ClInclude Include="Source\Framework\FrameworkMacros.h" />
     <ClInclude Include="Source\Framework\Method.h" />
     <ClInclude Include="Source\Framework\Module.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="Source\Framework\AppObject.cpp" />
     <ClCompile Include="Source\Framework\Application.cpp" />
     <ClCompile Include="Source\Framework\Engine.cpp" />
+    <ClCompile Include="Source\Framework\EnumBase.cpp" />
     <ClCompile Include="Source\Framework\ModuleManager.cpp" />
     <ClCompile Include="Source\Framework\ObjectBase.cpp" />
     <ClCompile Include="Source\Framework\Property.cpp" />

@@ -15,9 +15,6 @@
 #define REGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
 #define UNREGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
 
-//same as register struct
-#define REGISTER_ENUM(EnumClass) GET_SINGLETON(StructRegistry).Register<EnumClass>({#EnumClass, ClassType(typeid(EnumClass)), GetCurrentModuleName()});
-#define UNREGISTER_ENUM(EnumClass) GET_SINGLETON(StructRegistry).Unregister({#EnumClass, ClassType(typeid(EnumClass)), GetCurrentModuleName()});
 
 #define REGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
 #define UNREGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
@@ -145,10 +142,6 @@ public:
 		auto instantiator = it->second;
 		T* obj = instantiator(std::forward<ConstructionArgs>(args)...);
 
-		//set the assigned module name for the object
-		if constexpr (std::is_same<Key, ObjectRegisterKey>::value)
-			obj->SetAssociatedModuleName(subclass_key.AssignedModuleName);
-
 		return obj;
 	}
 
@@ -162,11 +155,6 @@ public:
 			{
 				auto instantiator = it->second;
 				T* obj = instantiator(std::forward<ConstructionArgs>(args)...);
-
-				//set the assigned module name for the object
-				if constexpr (std::is_same<Key, ObjectRegisterKey>::value)
-					obj->SetAssociatedModuleName((*it).first.AssignedModuleName);
-
 				return obj;
 			}
 		}

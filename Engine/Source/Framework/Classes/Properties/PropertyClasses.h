@@ -1,10 +1,12 @@
 #pragma once
 #include "Framework/Property.h"
 #include "Framework/StructBase.h"
+#include "Framework/EnumBase.h"
 
 struct BoolProperty : public Property
 {
 	PROP_CLASS_DEF(BoolProperty, bool);
+	PROP_DEFAULT_ALLOCATE()
 
 	Buffer MakeValueBuffer(const void* ValuePtr) const override
 	{
@@ -24,6 +26,7 @@ struct BoolProperty : public Property
 struct FloatProperty : public Property
 {
 	PROP_CLASS_DEF(FloatProperty, float)
+	PROP_DEFAULT_ALLOCATE()
 
 	Buffer MakeValueBuffer(const void* valuePtr) const override
 	{
@@ -43,6 +46,7 @@ struct FloatProperty : public Property
 struct IntProperty : public Property
 {
 	PROP_CLASS_DEF(IntProperty, int);
+	PROP_DEFAULT_ALLOCATE()
 
 	Buffer MakeValueBuffer(const void* ValuePtr) const override
 	{
@@ -62,6 +66,7 @@ struct IntProperty : public Property
 struct StringProperty : public Property
 {
 	PROP_CLASS_DEF(StringProperty, std::string)
+	PROP_DEFAULT_ALLOCATE()
 
 	Buffer MakeValueBuffer(const void* valuePtr) const override
 	{
@@ -82,6 +87,17 @@ struct StructProperty : public Property
 {
 	PROP_CLASS_DEF(StructProperty, StructBase)
 
+	void AllocateValue(void*& ptr) const override
+	{
+		//Allocate the pointer as the correct new struct type 
+		ptr = GET_SINGLETON(StructRegistry).MakeObjectFromClassName(((StructBase*)GetValue())->GetClassType().Name);
+	}
+
+	bool IsMatchingValueType(void* ValuePtr, const ClassType& ValueType) const override
+	{
+		return ClassUtils::IsStruct(ValueType); //matching if its a struct
+	}
+
 	Buffer MakeValueBuffer(const void* valuePtr) const override
 	{
 		Buffer out;
@@ -99,3 +115,32 @@ struct StructProperty : public Property
 	}
 };
 
+struct EnumProperty : public Property
+{
+	PROP_CLASS_DEF(EnumProperty, EnumBase)
+
+	bool IsMatchingValueType(void* ValuePtr, const ClassType& ValueType) const override
+	{
+		return ClassUtils::IsEnum(ValueType); //enum if it casts to an enum class
+	}
+
+	Buffer MakeValueBuffer(const void* valuePtr) const override
+	{
+		Buffer out;
+		BufferWritter writter(out);
+		EnumBase* enumValue = (EnumBase*)valuePtr;
+		int value = enumValue->ConstIntValue();
+		writter.Write( &value, sizeof(int) );
+		return out;
+	}
+
+	void ValueFromBuffer(void* targetPtr, const Buffer& buffer) const override
+	{
+		BufferReader reader(buffer);
+		Buffer StructBuffer;
+		EnumBase* enumValue = (EnumBase*)targetPtr;
+		int value;
+		reader.Read(&value, sizeof(int));
+		enumValue->IntValue() = value;
+	}
+};

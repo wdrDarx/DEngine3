@@ -12,7 +12,6 @@ struct SafeObjectPtr
 {
 	~SafeObjectPtr()
 	{
-		m_ModuleUnloadEvent.Destroy();
 	}
 
 	SafeObjectPtr()
@@ -21,13 +20,6 @@ struct SafeObjectPtr
 		auto app = engine.GetApplication();
 		if (app)
 		{
-			m_ModuleUnloadEvent.Assign([&](EventModuleUnloaded& event)
-			{
-				if (!m_Ptr) return;
-				if (event.ModuleName == m_Ptr->GetAssociatedModuleName())
-					m_Ptr = nullptr;
-			});
-
 			app->GetModuleManager().BindOnModuleUnloaded(m_ModuleUnloadEvent);
 		}
 	}
@@ -44,6 +36,11 @@ struct SafeObjectPtr
 
 	T* m_Ptr = nullptr;
 
-	Callback<EventModuleUnloaded> m_ModuleUnloadEvent;
+	Callback<EventModuleUnloaded> m_ModuleUnloadEvent = [&](EventModuleUnloaded& event)
+	{
+		if (!m_Ptr) return;
+		if (event.ModuleName == m_Ptr->GetAssociatedModuleName())
+			m_Ptr = nullptr;
+	};
 };
 

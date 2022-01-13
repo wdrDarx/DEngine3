@@ -113,6 +113,7 @@
     <ClInclude Include="Source\Framework\StructBase.h" />
     <ClInclude Include="Source\Misc\SafeObjectPtr.h" />
     <ClInclude Include="Source\Utils\ObjectUtils.h" />
+    <ClInclude Include="Source\Framework\EnumBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Log.cpp">
@@ -162,5 +163,6 @@
     <ClCompile Include="Source\Framework\StructBase.cpp" />
     <ClCompile Include="Source\Misc\SafeObjectPtr.cpp" />
     <ClCompile Include="Source\Utils\ObjectUtils.cpp" />
+    <ClCompile Include="Source\Framework\EnumBase.cpp" />
   </ItemGroup>
 </Project>
