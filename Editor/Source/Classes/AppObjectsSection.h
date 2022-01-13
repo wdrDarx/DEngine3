@@ -20,14 +20,14 @@ public:
 		for (auto& obj : GetEditorApp()->GetAppObjects())
 		{
 			std::string Name = obj->GetName() + " (" + obj->GetObjectInitializer().AssociatedModuleName + ")";
-			ImGuiTreeNodeFlags flags = (m_SelectedObject == obj.get() ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+			ImGuiTreeNodeFlags flags = (m_SelectedObject.Get() == obj.get() ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 			flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
 			bool expanded = ImGui::TreeNodeEx((void*)obj->GetID().ID, flags, Name.c_str());
 
 			if (ImGui::IsItemClicked())
 			{
-				m_SelectedObject = obj.get();
+				m_SelectedObject.Get() = obj.get();
 			}
 
 			if(expanded)
@@ -37,6 +37,6 @@ public:
 		ImGui::End();
 	}
 
-	AppObject* m_SelectedObject = nullptr;
+	SafeObjectPtr<AppObject> m_SelectedObject = nullptr;
 };
 

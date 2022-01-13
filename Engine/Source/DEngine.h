@@ -17,6 +17,8 @@
 #include "Utils/Paths.h"
 #include "Utils/VectorUtils.h"
 #include "Utils/FileSystem.h"
+#include "Utils/ClassUtils.h"
+#include "Utils/ObjectUtils.h"
 
 //Event
 #include "Event/Callback.h"
@@ -25,6 +27,7 @@
 
 //Misc
 #include "Misc/Singleton.h"
+#include "Misc/SafeObjectPtr.h"
 
 //Framework
 #include "Framework/Tick.h"
@@ -38,6 +41,8 @@
 #include "Framework/Property.h"
 #include "Framework/ClassType.h"
 #include "Framework/StaticClass.h"
+#include "Framework/Method.h"
+#include "Framework/StructBase.h"
 
 //FrameworkClasses
 #include "Framework/Classes/Properties/PropertyClasses.h"

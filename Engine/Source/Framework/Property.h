@@ -6,17 +6,14 @@
 #include "Misc/Singleton.h"
 #include "Core/Core.h"
 
-#define PROPDEF(member) [&]() -> Property* { Property* out = nullptr; \
-if(typeid(member) == typeid(float)) { out = new FloatProperty(member); } \
- return out; }()
-
 //e.g  PROP_CLASS_DEF(FloatProperty, float)
 #define PROP_CLASS_DEF(class, WrappingTypename) \
 using Typename = WrappingTypename; \
 using ThisClass = class; \
 void AllocateValue(void*& ptr) const override { ptr = new WrappingTypename; } \
 ThisClass(const std::string& name, Typename& value) : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { m_Value = &value; SetName(name); } \
-ThisClass() : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { };
+ThisClass() : Property(ClassType(typeid(ThisClass)), ClassType(typeid(Typename))) { }; \
+ bool operator==(const Property& other) const override { return (*(Typename*)GetValue()) == (*(Typename*)other.GetValue()); }
 
 
 enum PropFlags
@@ -43,6 +40,12 @@ public:
 	virtual ~Property()
 	{
 
+	}
+
+	//equals operator 
+	virtual bool operator==(const Property& other) const
+	{
+		return false;
 	}
 
 	//entire property
@@ -91,9 +94,14 @@ public:
 		m_Metadata = meta;
 	}
 
-	const void* GetValue() const
+	virtual const void* GetValue() const
 	{
 		return m_Value;
+	}
+
+	void SetValue(void* ptr)
+	{
+		m_Value = ptr;
 	}
 
 	//the type points to an actual C type e.g float
@@ -131,24 +139,42 @@ public:
 };
 
 //Unlike a normal property, a static property just stores the value inside itself within a buffer. It knows its type however to get the raw value of the buffer it needs to find the correct function to deserialize it
-struct StaticProperty
+struct StaticProperty : public Property
 {
 
-	StaticProperty() : m_Type(typeid(void))
+	//need a copy constructor to explicitly copy the value of this property
+	StaticProperty(const StaticProperty& other)
+	{
+		CopyFrom(other);
+	}
+
+	StaticProperty& operator=(const StaticProperty& other)
+	{
+		CopyFrom(other);
+		return *this;
+	}
+
+	StaticProperty(StaticProperty&& other) noexcept
+	{
+		//not sure if we should also delete the other here because its a move
+		CopyFrom(other);
+	}
+
+	StaticProperty() : Property()
 	{
 
 	}
 
 	~StaticProperty()
 	{
-		
+		//actually delete the value because we own it
+		if (m_Value)
+			delete m_Value;
 	}
-	
 	
 	void FromProperty(const Property& prop);
 
 	//quick function to make a static property from a custom property class 
-	//e.g Make(StringProperty("Name"), &MyString)
 	template<class T>
 	static StaticProperty Make(const T& SourceProp)
 	{
@@ -157,20 +183,24 @@ struct StaticProperty
 		return out;
 	}
 
+	void CopyFrom(const StaticProperty& other);
+
+
 	template<typename T>
 	static StaticProperty Make(const std::string& name, const T& value)
 	{
 		StaticProperty out;
-		out.m_Name = name;
-		out.m_Type = ClassType(typeid(value));
+		out.SetName(name); //set the name
+		out.m_ValueType = ClassType(typeid(value)); //set the value type
 		PropertyRegistry& registry = GET_SINGLETON(PropertyRegistry);
 		for (auto& key : registry.GetRegisteredKeys())
 		{
-			Property* prop = registry.Make(key);
+			Ref<Property> prop = ToRef<Property>(registry.Make(key));
 			if (prop->GetValueType().typeIndex == typeid(T))
 			{
-				out.m_Data = prop->MakeValueBuffer(&value);
-				delete prop; //property class has done its job
+				out.m_Type = prop->GetType(); //find corresponding prop type to the value type and set it here
+				prop->AllocateValue(out.m_Value); //Allocate correct pointer type
+				out.ValueFromBuffer(out.m_Value, prop->MakeValueBuffer(&value)); //copy over the input value via serialzation with the correct functions
 				return out;
 			}
 		}
@@ -178,27 +208,24 @@ struct StaticProperty
 		return out;
 	}
 
-	//Gets pointer to raw value of this property by correctly deserializing the value, this pointer can be casted to the desired type
-	void* GetRawValue() const;
+	//makes the value buffer by searching for the correct serialization function based on the property type of this static property
+	Buffer MakeValueBuffer(const void* ValuePtr) const override;
 
-	Buffer m_Data;
-	ClassType m_Type;
-	std::string m_Name;
-	std::string m_Metadata;
-	int m_Flags;
+	//deserializes the value the same way as MakeValueBuffer
+	void ValueFromBuffer(void* TargetValuePtr, const Buffer& buffer) const override;
 };
 
 
 //Creates a property if the type passed in is registered with a prop type
 template<typename T>
-inline Property* CreatePropertyFromMember(T& memeber, const std::string& name, const std::string& metadata, int Flags)
+inline Ref<Property> CreatePropertyFromMember(T& memeber, const std::string& name, const std::string& metadata, int Flags)
 {
 	ClassType type(typeid(T));
 	PropertyRegistry& registry = GET_SINGLETON(PropertyRegistry);
 	for (auto& key : registry.GetRegisteredKeys())
 	{
-		Property* prop = registry.Make(key);
-		if (prop->GetValueType() == type) // check if prop value type matches the memeber type we got
+		Ref<Property> prop = ToRef<Property>(registry.Make(key));
+		if (prop->GetValueType() == type || ( ClassUtils::IsStruct(prop->GetValueType())  && ClassUtils::IsStruct(type)) ) // check if prop value type matches the memeber type we got
 		{
 			prop->m_Value = &memeber; //set value ptr to the member
 			prop->SetName(name);
@@ -207,72 +234,11 @@ inline Property* CreatePropertyFromMember(T& memeber, const std::string& name, c
 			prop->SetFlags(Flags);
 			return prop;
 		}
-		else
-			delete prop; //no match so delete prop
 	}
 
-	LOG_ERROR("Tried to define property {0} with no registered property class!");
+	LOG_ERROR("Tried to define property {0} with no registered property class!", name);
 	return nullptr;
 }
-
-
-struct PropArgDef
-{
-	PropArgDef() : Name(""), Type(typeid(void))
-	{
-
-	}
-
-	PropArgDef(const std::string& name, const std::type_index& type) : Name(name), Type(type)
-	{
-
-	}
-
-	std::string Name;
-	std::type_index Type;
-};
-
-struct PropArray
-{
-	template<typename T>
-	const T& Get(size_t index) const
-	{
-		void* value = m_Props[i].GetRawValue();
-		return *(T*)value;
-	}
-
-	template<typename T>
-	const T& Get(const std::string& name) const
-	{
-		void* value = nullptr;
-
-		for (uint i = 0; i < m_Props.size(); i++)
-		{
-			if (m_Props[i].m_Name == name)
-			{
-				value = m_Props[i].GetRawValue();
-				break;
-			}
-		}
-
-		return *(T*)value;
-	}
-
-	std::vector<StaticProperty> m_Props;
-};
-
-using PropArgsDefs = std::vector<PropArgDef>;
-
-struct Method
-{
-	std::function<void(const PropArray&)> m_Function;
-	PropArgsDefs m_Arguments;
-
-	void Call(const PropArray& args)
-	{
-		m_Function(args);
-	}
-};
 
 
 

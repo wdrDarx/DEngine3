@@ -15,6 +15,7 @@
     <ClInclude Include="Source\Classes\PropertiesSection.h" />
     <ClInclude Include="Source\Classes\AppObjectsSection.h" />
     <ClInclude Include="Source\Classes\PropertyPannel.h" />
+    <ClInclude Include="Source\Classes\PerformanceSection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Classes\EditorApp.cpp">

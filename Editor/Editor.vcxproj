@@ -158,6 +158,7 @@ IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Runtime-w
     <ClInclude Include="Source\Classes\ModulesSection.h" />
     <ClInclude Include="Source\Classes\EditorSection.h" />
     <ClInclude Include="Source\Classes\EditorApp.h" />
+    <ClInclude Include="Source\Classes\PerformanceSection.h" />
     <ClInclude Include="Source\Classes\PropertiesSection.h" />
     <ClInclude Include="Source\Classes\PropertyPannel.h" />
     <ClInclude Include="Source\Classes\RegistrySection.h" />

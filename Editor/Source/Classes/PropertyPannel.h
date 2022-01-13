@@ -77,29 +77,47 @@ public:
 
 	}
 
-	void DrawProp(Property* prop)
+	void DrawPropRaw(Property* prop)
 	{
-		ImGui::Text(prop->GetName().c_str());
-		ImGui::NextColumn();
-
 		auto drawTypesObj = m_EditorApp->GetAppObject<PropertyDrawTypes>();
-		ImGuiContext* context =  ImGui::GetCurrentContext();
+		ImGuiContext* context = ImGui::GetCurrentContext();
 
 		ImGui::PushID(prop);
 
-		if(auto func = drawTypesObj->GetDrawFuncForPropClass(prop->GetType()))
-			func(context,prop);
+		if (auto func = drawTypesObj->GetDrawFuncForPropClass(prop->GetType()))
+			func(context, prop);
 
 		ImGui::PopID();
 
-		if(ImGui::GetCurrentContext() != context)
+		if (ImGui::GetCurrentContext() != context)
 			ImGui::SetCurrentContext(context);
+	}
+
+	void DrawProp(Property* prop, ObjectBase* Owner = nullptr, ObjectBase* BaseObj = nullptr)
+	{
+		if (Owner && BaseObj) 
+		{
+			if (ObjectUtils::HasPropertyChanged(*prop, *BaseObj))
+			{
+				if (ImGui::Button(">"))
+				{
+					ObjectUtils::ResetProperty(prop->GetName(), *Owner);
+				}
+
+				ImGui::SameLine();
+			}
+		}
+
+		ImGui::Text(prop->GetName().c_str());
+		ImGui::NextColumn();
+
+		DrawPropRaw(prop);
 
 		ImGui::NextColumn();
 	}
 
 
-	void DrawProperties(const std::vector<Property*>& props)
+	void DrawProperties(const std::vector<Ref<Property>>& props, ObjectBase* Owner = nullptr, ObjectBase* BaseObj = nullptr) //without the owner pointer there are no default resets
 	{
 		ImGui::Columns(2);
 		for (auto& prop : props)
@@ -112,10 +130,10 @@ public:
 			}
 			else
 			{
-				DrawProp(prop);
+				DrawProp(prop.get(), Owner, BaseObj);
 			}
 		}
-		ImGui::EndColumns();
+		ImGui::Columns(1);
 	}
 
 	EditorApp* m_EditorApp = nullptr;

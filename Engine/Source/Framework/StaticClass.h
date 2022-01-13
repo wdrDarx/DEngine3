@@ -58,7 +58,7 @@ public:
 
 	}
 
-	const std::vector<Property*>& GetDefaultProperties() const;
+	const std::vector<Ref<Property>>& GetDefaultProperties() const;
 
 	const ClassType& GetClassType() const
 	{

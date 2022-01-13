@@ -157,6 +157,13 @@ inline void hash_combine(std::size_t& seed, const T& v, Rest... rest) {
 	hash_combine(seed, rest...);
 }
 
+template<typename T, typename... U>
+size_t GetFuncAddress(std::function<T(U...)> f) {
+	typedef T(fnType)(U...);
+	fnType** fnPointer = f.template target<fnType*>();
+	return (size_t)*fnPointer;
+}
+
 //Derive - is not a class, so it is always false_type
 template <template <typename...> class BaseTemplate, typename Derived>
 struct test_base_template<BaseTemplate, Derived, std::enable_if_t<!std::is_class_v<Derived>>>

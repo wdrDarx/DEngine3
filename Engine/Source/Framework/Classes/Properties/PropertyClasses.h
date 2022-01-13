@@ -1,5 +1,6 @@
 #pragma once
 #include "Framework/Property.h"
+#include "Framework/StructBase.h"
 
 struct BoolProperty : public Property
 {
@@ -76,3 +77,25 @@ struct StringProperty : public Property
 		reader.ReadString(*(std::string*)targetPtr);
 	}
 };
+
+struct StructProperty : public Property
+{
+	PROP_CLASS_DEF(StructProperty, StructBase)
+
+	Buffer MakeValueBuffer(const void* valuePtr) const override
+	{
+		Buffer out;
+		BufferWritter writter(out);
+		writter.WriteBuffer(((StructBase*)valuePtr)->MakeBuffer());
+		return out;
+	}
+
+	void ValueFromBuffer(void* targetPtr, const Buffer& buffer) const override
+	{
+		BufferReader reader(buffer);
+		Buffer StructBuffer;
+		reader.ReadBuffer(StructBuffer);
+		((StructBase*)targetPtr)->FromBuffer(StructBuffer);
+	}
+};
+

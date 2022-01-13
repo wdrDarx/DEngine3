@@ -193,9 +193,15 @@ public:
 	void LoadPropsFromBuffer(const Buffer& buffer);
 
 	//this is manually overriden on all object classes with a macro
-	virtual ClassType GetClassType()
+	virtual ClassType GetClassType() const
 	{
 		return typeid(this);
+	}
+
+	//this is manually overriden on all object classes with a macro
+	virtual ClassType GetParentClassType() const
+	{
+		return typeid(Super);
 	}
 
 	//get static class - use OBJECT_STATIC_CLASS()
@@ -240,7 +246,7 @@ public:
 		return m_ObjectFlags;
 	}
 
-	const std::vector<Property*>& GetProperties() const
+	const std::vector<Ref<Property>>& GetProperties() const
 	{
 		return m_Properties;
 	}
@@ -248,7 +254,7 @@ public:
 protected:
 
 	//Array of properties that point to members of this class
-	std::vector<Property*> m_Properties;
+	std::vector<Ref<Property>> m_Properties;
 
 private:
 

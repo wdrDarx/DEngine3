@@ -5,6 +5,7 @@
 #include "RegistrySection.h"
 #include "AppObjectsSection.h"
 #include "PropertiesSection.h"
+#include "PerformanceSection.h"
 
 
 EditorApp::EditorApp() : Application()
@@ -18,8 +19,9 @@ void EditorApp::Init()
 
 	//create editor window
 	m_EditorWindow = CreateNewWindow("DEditor", { 1280, 720 });
+	m_EditorWindow->SetVsync(false);
 
-	CreateNewWindow("Test", { 1280, 720 });
+	CreateNewWindow("Test", { 1280, 720 })->SetVsync(false);
 
 	//create base dirs
 	Paths::CreateBaseDirs();
@@ -36,6 +38,7 @@ void EditorApp::Init()
 	CreateEditorSection<RegistrySection>(GetEditorWindow().get());
 	CreateEditorSection<AppObjectsSection>(GetEditorWindow().get());
 	CreateEditorSection<PropertiesSection>(GetEditorWindow().get());
+	CreateEditorSection<PerformanceSection>(GetEditorWindow().get());
 
 	//bind to shutdown if the main window is closed
 	GetEditorWindow()->BindOnWindowClosed(m_EditorWindowCloseCallback);
@@ -57,7 +60,7 @@ void EditorApp::RenderUI()
 {
 
 	//set the properties pannel selected object as the selected app object
-	GetEditorSection<PropertiesSection>()->m_ObjectToDraw = GetEditorSection<AppObjectsSection>()->m_SelectedObject;
+	GetEditorSection<PropertiesSection>()->m_ObjectToDraw.Get() = GetEditorSection<AppObjectsSection>()->m_SelectedObject.Get();
 
 	//render all sections
 	for (auto& sec : GetEditorSections())

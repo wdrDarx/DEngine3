@@ -108,6 +108,11 @@
     <ClInclude Include="Source\Event\Event.h" />
     <ClInclude Include="Source\Event\EventDispatcher.h" />
     <ClInclude Include="Source\Utils\VectorUtils.h" />
+    <ClInclude Include="Source\Framework\Method.h" />
+    <ClInclude Include="Source\Utils\ClassUtils.h" />
+    <ClInclude Include="Source\Framework\StructBase.h" />
+    <ClInclude Include="Source\Misc\SafeObjectPtr.h" />
+    <ClInclude Include="Source\Utils\ObjectUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Log.cpp">
@@ -153,5 +158,9 @@
     <ClCompile Include="Source\UI\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Source\UI\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="Source\Utils\ModuleUtils.cpp" />
+    <ClCompile Include="Source\Utils\ClassUtils.cpp" />
+    <ClCompile Include="Source\Framework\StructBase.cpp" />
+    <ClCompile Include="Source\Misc\SafeObjectPtr.cpp" />
+    <ClCompile Include="Source\Utils\ObjectUtils.cpp" />
   </ItemGroup>
 </Project>

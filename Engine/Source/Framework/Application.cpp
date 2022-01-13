@@ -9,10 +9,7 @@ Application::Application() : m_ModuleManager(ToRef<Application>(this)) //initial
 	if(AUTO_UNREGISTER)
 		m_ModuleManager.BindOnModuleUnloaded(m_ModuleUnloadedCallback);
 
-	REGISTER_PROPERTY(StringProperty);
-	REGISTER_PROPERTY(FloatProperty);
-	REGISTER_PROPERTY(IntProperty);
-	REGISTER_PROPERTY(BoolProperty);
+	RegisterBaseClasses();
 }
 
 void Application::OnUpdate(float DeltaTime)
@@ -30,6 +27,21 @@ void Application::OnUpdate(float DeltaTime)
 		if (obj)
 			obj->OnUpdate(Tick(TickGroup::EDITOR, DeltaTime));
 	}
+}
+
+
+void Application::RegisterBaseClasses() const
+{
+	//Property classes
+	REGISTER_PROPERTY(StringProperty);
+	REGISTER_PROPERTY(FloatProperty);
+	REGISTER_PROPERTY(IntProperty);
+	REGISTER_PROPERTY(BoolProperty);
+	REGISTER_PROPERTY(StructProperty);
+
+	//Objects
+	REGISTER_OBJECT(ObjectBase);
+	REGISTER_OBJECT(AppObject);
 }
 
 void Application::CoreUpdate(float DeltaTime)

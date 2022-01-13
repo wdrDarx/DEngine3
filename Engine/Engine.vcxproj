@@ -156,13 +156,16 @@
     <ClInclude Include="Source\Framework\Classes\Properties\PropertyClasses.h" />
     <ClInclude Include="Source\Framework\Engine.h" />
     <ClInclude Include="Source\Framework\FrameworkMacros.h" />
+    <ClInclude Include="Source\Framework\Method.h" />
     <ClInclude Include="Source\Framework\Module.h" />
     <ClInclude Include="Source\Framework\ModuleManager.h" />
     <ClInclude Include="Source\Framework\ObjectBase.h" />
     <ClInclude Include="Source\Framework\Property.h" />
     <ClInclude Include="Source\Framework\Registry.h" />
     <ClInclude Include="Source\Framework\StaticClass.h" />
+    <ClInclude Include="Source\Framework\StructBase.h" />
     <ClInclude Include="Source\Framework\Tick.h" />
+    <ClInclude Include="Source\Misc\SafeObjectPtr.h" />
     <ClInclude Include="Source\Misc\Singleton.h" />
     <ClInclude Include="Source\Rendering\RenderAPI.h" />
     <ClInclude Include="Source\Rendering\RenderCore.h" />
@@ -171,8 +174,10 @@
     <ClInclude Include="Source\UI\ImGui\ImGuiLayer.h" />
     <ClInclude Include="Source\UI\ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="Source\UI\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Source\Utils\ClassUtils.h" />
     <ClInclude Include="Source\Utils\FileSystem.h" />
     <ClInclude Include="Source\Utils\ModuleUtils.h" />
+    <ClInclude Include="Source\Utils\ObjectUtils.h" />
     <ClInclude Include="Source\Utils\Paths.h" />
     <ClInclude Include="Source\Utils\Rand.h" />
     <ClInclude Include="Source\Utils\Thread.h" />
@@ -188,6 +193,8 @@
     <ClCompile Include="Source\Framework\ObjectBase.cpp" />
     <ClCompile Include="Source\Framework\Property.cpp" />
     <ClCompile Include="Source\Framework\StaticClass.cpp" />
+    <ClCompile Include="Source\Framework\StructBase.cpp" />
+    <ClCompile Include="Source\Misc\SafeObjectPtr.cpp" />
     <ClCompile Include="Source\Misc\Singleton.cpp" />
     <ClCompile Include="Source\Rendering\RenderAPI.cpp" />
     <ClCompile Include="Source\Rendering\Window.cpp" />
@@ -195,8 +202,10 @@
     <ClCompile Include="Source\UI\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="Source\UI\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Source\UI\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Source\Utils\ClassUtils.cpp" />
     <ClCompile Include="Source\Utils\FileSystem.cpp" />
     <ClCompile Include="Source\Utils\ModuleUtils.cpp" />
+    <ClCompile Include="Source\Utils\ObjectUtils.cpp" />
     <ClCompile Include="Source\Utils\Paths.cpp" />
     <ClCompile Include="Source\Utils\Rand.cpp" />
   </ItemGroup>

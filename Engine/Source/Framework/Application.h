@@ -156,6 +156,9 @@ public:
 		return m_AppType;
 	}
 
+	//registers engine defaults
+	void RegisterBaseClasses() const;
+
 	void SetAppType(AppType type)
 	{
 		m_AppType = type;
