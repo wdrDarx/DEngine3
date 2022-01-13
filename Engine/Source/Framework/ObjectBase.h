@@ -4,6 +4,7 @@
 #include "Serialization/Buffer.h"
 #include "Framework/Property.h"
 #include "Framework/StaticClass.h"
+#include "Framework/Registry.h"
 
 enum ConstructFlags
 {
@@ -267,3 +268,10 @@ private:
 	//name of the object (could be empty)
 	std::string m_Name = "";
 };
+
+//Create Object Registry
+using ObjectRegistry = _RegistryBase<ClassRegisterKey, ObjectBase>;
+DEFINE_SINGLETON(ObjectRegistry, Get_ObjectRegistry);
+
+#define REGISTER_OBJECT(ObjectClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, ClassType(typeid(ObjectClass)), GetCurrentModuleName()});
+#define UNREGISTER_OBJECT(ObjectClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, ClassType(typeid(ObjectClass)), GetCurrentModuleName()});

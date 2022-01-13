@@ -248,6 +248,12 @@ inline Ref<Property> CreatePropertyFromMember(T& member, const std::string& name
 	return nullptr;
 }
 
+//Create the property registry
+using PropertyRegistry = _RegistryBase<ClassRegisterKey, Property>;
+DEFINE_SINGLETON(PropertyRegistry, Get_PropertyRegistry);
+
+#define REGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
+#define UNREGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
 
 
 

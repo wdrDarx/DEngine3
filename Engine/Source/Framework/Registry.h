@@ -6,71 +6,37 @@
 #include "Utils/ModuleUtils.h"
 #include "Framework/ClassType.h"
 
-#define REGISTER_OBJECT(ObjectClass) GET_SINGLETON(ObjectRegistry).Register<ObjectClass>({#ObjectClass, ClassType(typeid(ObjectClass)), GetCurrentModuleName()});
-#define UNREGISTER_OBJECT(ObjectClass) GET_SINGLETON(ObjectRegistry).Unregister({#ObjectClass, ClassType(typeid(ObjectClass)), GetCurrentModuleName()});
+//#define REGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
+//#define UNREGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
 
-#define REGISTER_STRUCT(StructClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, ClassType(typeid(StructClass)), GetCurrentModuleName()});
-#define UNREGISTER_STRUCT(StructClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, ClassType(typeid(StructClass)), GetCurrentModuleName()});
-
-#define REGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Register<PropertyClass>({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
-#define UNREGISTER_PROPERTY(PropertyClass) GET_SINGLETON(PropertyRegistry).Unregister({#PropertyClass, ClassType(typeid(PropertyClass)), GetCurrentModuleName()});
-
-
-#define REGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Register<AssetClass>({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
-#define UNREGISTER_ASSETCLASS(AssetClass) GET_SINGLETON(AssetRegistry).Unregister({#AssetClass, ClassType(typeid(AssetClass)), GetCurrentModuleName()});
-
-
-struct ObjectRegisterKey
-{
-	std::string name;
-	ClassType Type;
-	std::string AssignedModuleName;
-
-	bool operator==(const ObjectRegisterKey& other) const
-	{
-		return (name == other.name && AssignedModuleName == other.AssignedModuleName && Type == other.Type);
-	}
-};
 
 //same class cuz of SetAssociatedModuleName for all objects
-struct StructRegisterKey
+struct ClassRegisterKey
 {
 	std::string name;
 	ClassType Type;
 	std::string AssignedModuleName;
 
-	bool operator==(const StructRegisterKey& other) const
+	bool operator==(const ClassRegisterKey& other) const
 	{
 		return (name == other.name && AssignedModuleName == other.AssignedModuleName && Type == other.Type);
 	}
 };
 
-using PropertyRegisterKey = StructRegisterKey;
+using PropertyRegisterKey = ClassRegisterKey;
 
 namespace std 
 {
 	template <>
-	struct hash<ObjectRegisterKey>
+	struct hash<ClassRegisterKey>
 	{
-		std::size_t operator()(const ObjectRegisterKey& k) const
+		std::size_t operator()(const ClassRegisterKey& k) const
 		{
 			size_t out = 0;
 			hash_combine(out, k.name, k.AssignedModuleName, k.Type);
 			return out;
 		}
 	};
-
-	template <>
-	struct hash<StructRegisterKey>
-	{
-		std::size_t operator()(const StructRegisterKey& k) const
-		{
-			size_t out = 0;
-			hash_combine(out, k.name, k.AssignedModuleName, k.Type);
-			return out;
-		}
-	};
-
 }
 
 class Application;
@@ -171,23 +137,6 @@ public:
 	//here just in case i change some mad shit
 	Ref<Application> m_App;
 };
-
-//they are the same basically
-using AssetRegisterKey = StructRegisterKey;
-class Asset;
-class ObjectBase;
-struct StructBase;
-struct Property;
-
-using ObjectRegistry = _RegistryBase<ObjectRegisterKey, ObjectBase>;
-using StructRegistry = _RegistryBase<StructRegisterKey, StructBase>;
-using AssetRegistry = _RegistryBase<AssetRegisterKey, Asset>;
-using PropertyRegistry = _RegistryBase<PropertyRegisterKey, Property>;
-
-DEFINE_SINGLETON(ObjectRegistry, Get_ObjectRegistry);
-DEFINE_SINGLETON(StructRegistry, Get_StructRegistry);
-DEFINE_SINGLETON(AssetRegistry, Get_AssetRegistry);
-DEFINE_SINGLETON(PropertyRegistry, Get_PropertyRegistry);
 
 #if 0 //DEPRECATED 
 struct RegisterRequestHolder

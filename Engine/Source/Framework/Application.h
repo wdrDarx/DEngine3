@@ -6,6 +6,9 @@
 #include "Framework/AppObject.h"
 #include "Framework/ModuleManager.h"
 #include "Framework/Registry.h"
+#include "Framework/StructBase.h"
+#include "Framework/EnumBase.h"
+#include "Framework/ObjectBase.h"
 
 //Utils
 #include "Utils/Thread.h"
@@ -194,7 +197,8 @@ private:
 			ObjectRegistry& ObjectReg = GET_SINGLETON(ObjectRegistry);
 			StructRegistry& StructReg = GET_SINGLETON(StructRegistry);
 			PropertyRegistry& PropReg = GET_SINGLETON(PropertyRegistry);
-			AssetRegistry& AssetReg = GET_SINGLETON(AssetRegistry);
+			EnumRegistry& EnumReg = GET_SINGLETON(EnumRegistry);
+			//AssetRegistry& AssetReg = GET_SINGLETON(AssetRegistry);
 
 			for (auto& reg : ObjectReg.GetRegisteredKeys())
 			{
@@ -220,13 +224,21 @@ private:
 				}
 			}
 
-			for (auto& reg : AssetReg.GetRegisteredKeys())
+			for (auto& reg : EnumReg.GetRegisteredKeys())
 			{
 				if (reg.AssignedModuleName == event.ModuleName)
 				{
-					AssetReg.Unregister(reg);
+					EnumReg.Unregister(reg);
 				}
 			}
+
+// 			for (auto& reg : AssetReg.GetRegisteredKeys())
+// 			{
+// 				if (reg.AssignedModuleName == event.ModuleName)
+// 				{
+// 					AssetReg.Unregister(reg);
+// 				}
+// 			}
 		};
 
 };

@@ -82,7 +82,7 @@ struct DENGINE_API EnumBase
 };
 
 //Create Enum Registry
-using EnumRegistrerkey = StructRegisterKey;
+using EnumRegistrerkey = ClassRegisterKey;
 using EnumRegistry = _RegistryBase<EnumRegistrerkey, EnumBase>;
 DEFINE_SINGLETON(EnumRegistry, Get_EnumRegistry);
 

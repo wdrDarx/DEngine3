@@ -20,7 +20,7 @@ public:
 		ObjectRegistry& ObjectReg = GET_SINGLETON(ObjectRegistry);
 		StructRegistry& StructReg = GET_SINGLETON(StructRegistry);
 		PropertyRegistry& PropReg = GET_SINGLETON(PropertyRegistry);
-		AssetRegistry& AssetReg = GET_SINGLETON(AssetRegistry);
+		EnumRegistry& EnumReg = GET_SINGLETON(EnumRegistry);
 
 		if (ImGui::TreeNode("Objects"))
 		{
@@ -55,9 +55,9 @@ public:
 			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNode("Assets"))
+		if (ImGui::TreeNode("Enums"))
 		{
-			for (auto& reg : AssetReg.GetRegisteredKeys())
+			for (auto& reg : EnumReg.GetRegisteredKeys())
 			{
 				std::string RegName = "(" + reg.AssignedModuleName + ") " + reg.name;
 				ImGui::Text(RegName.c_str());

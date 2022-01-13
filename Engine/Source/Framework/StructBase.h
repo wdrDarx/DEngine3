@@ -3,6 +3,7 @@
 #include "Serialization/Buffer.h"
 #include "Property.h"
 #include "StaticClass.h"
+#include "Framework/Registry.h"
 #include "FrameworkMacros.h"
 
 /*
@@ -85,3 +86,9 @@ public:
 protected:
 	std::vector<Ref<Property>> m_Properties;
 };
+
+using StructRegistry = _RegistryBase<ClassRegisterKey, StructBase>;
+DEFINE_SINGLETON(StructRegistry, Get_StructRegistry);
+
+#define REGISTER_STRUCT(StructClass) GET_SINGLETON(StructRegistry).Register<StructClass>({#StructClass, ClassType(typeid(StructClass)), GetCurrentModuleName()});
+#define UNREGISTER_STRUCT(StructClass) GET_SINGLETON(StructRegistry).Unregister({#StructClass, ClassType(typeid(StructClass)), GetCurrentModuleName()});
