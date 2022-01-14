@@ -155,6 +155,8 @@ IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Runtime-w
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Source\Classes\AppObjectsSection.h" />
+    <ClInclude Include="Source\Classes\EditorWindow.h" />
+    <ClInclude Include="Source\Classes\MainEditorWindow.h" />
     <ClInclude Include="Source\Classes\ModulesSection.h" />
     <ClInclude Include="Source\Classes\EditorSection.h" />
     <ClInclude Include="Source\Classes\EditorApp.h" />
@@ -162,6 +164,8 @@ IF EXIST ..\EngineContent\ (xcopy /Q /E /Y /I ..\EngineContent  ..\bin\Runtime-w
     <ClInclude Include="Source\Classes\PropertiesSection.h" />
     <ClInclude Include="Source\Classes\PropertyPannel.h" />
     <ClInclude Include="Source\Classes\RegistrySection.h" />
+    <ClInclude Include="Source\Classes\SceneObjectsSection.h" />
+    <ClInclude Include="Source\Classes\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Classes\EditorSection.cpp" />

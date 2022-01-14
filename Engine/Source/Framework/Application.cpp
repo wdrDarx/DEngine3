@@ -39,10 +39,20 @@ void Application::RegisterBaseClasses() const
 	REGISTER_PROPERTY(BoolProperty);
 	REGISTER_PROPERTY(StructProperty);
 	REGISTER_PROPERTY(EnumProperty);
+	REGISTER_PROPERTY(FunctionProperty);
+	REGISTER_PROPERTY(ObjectClassProperty);
+	REGISTER_PROPERTY(DebugTextProperty);
+	REGISTER_PROPERTY(Vec2dProperty);
+	REGISTER_PROPERTY(Vec3dProperty);
+	REGISTER_PROPERTY(TransformProperty);
 
 	//Objects
 	REGISTER_OBJECT(ObjectBase);
 	REGISTER_OBJECT(AppObject);
+	REGISTER_OBJECT(Scene);
+	REGISTER_OBJECT(SceneObject);
+	REGISTER_OBJECT(ObjectComponent);
+	REGISTER_OBJECT(TransformComponent);
 }
 
 void Application::CoreUpdate(float DeltaTime)

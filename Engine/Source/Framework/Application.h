@@ -3,7 +3,7 @@
 
 //Framework
 #include "Framework/Tick.h"
-#include "Framework/AppObject.h"
+#include "Framework/Classes/AppObject.h"
 #include "Framework/ModuleManager.h"
 #include "Framework/Registry.h"
 #include "Framework/StructBase.h"

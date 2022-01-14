@@ -6,6 +6,10 @@
 #include "AppObjectsSection.h"
 #include "PropertiesSection.h"
 #include "PerformanceSection.h"
+#include "SceneObjectsSection.h"
+
+//windows
+#include "MainEditorWindow.h"
 
 
 EditorApp::EditorApp() : Application()
@@ -18,10 +22,10 @@ void EditorApp::Init()
 	REGISTER_OBJECT(PropertyDrawTypes);
 
 	//create editor window
-	m_EditorWindow = CreateNewWindow("DEditor", { 1280, 720 });
+	m_EditorWindow = CreateNewEditorWindow<MainEditorWindow>()->GetWindow();
 	m_EditorWindow->SetVsync(false);
 
-	CreateNewWindow("Test", { 1280, 720 })->SetVsync(false);
+	//CreateNewWindow("Test", { 1280, 720 })->SetVsync(false);
 
 	//create base dirs
 	Paths::CreateBaseDirs();
@@ -39,6 +43,11 @@ void EditorApp::Init()
 	CreateEditorSection<AppObjectsSection>(GetEditorWindow().get());
 	CreateEditorSection<PropertiesSection>(GetEditorWindow().get());
 	CreateEditorSection<PerformanceSection>(GetEditorWindow().get());
+	CreateEditorSection<SceneObjectsSection>(GetEditorWindow().get());
+
+	//Create the editor scene
+	m_EditorScene = CreateAppObject<Scene>();
+	m_EditorScene->SetPipeline<DefaultPipeline>(m_EditorWindow->GetRenderAPI()); //set default pipeline
 
 	//bind to shutdown if the main window is closed
 	GetEditorWindow()->BindOnWindowClosed(m_EditorWindowCloseCallback);
@@ -58,49 +67,134 @@ void EditorApp::OnUpdate(float DeltaSeconds)
 
 void EditorApp::RenderUI()
 {
+	//set the properties pannel selected object as the selected Object
+	if (auto ptr = GetEditorSection<SceneObjectsSection>()->m_SelectedComponent.Get())
+	{
+		GetEditorSection<PropertiesSection>()->m_ObjectToDraw.Get() = ptr;
+	}
+	else
+		if (auto ptr = GetEditorSection<SceneObjectsSection>()->m_SelectedObject.Get())
+		{
+			GetEditorSection<PropertiesSection>()->m_ObjectToDraw.Get() = ptr;
+		}
+		else
+			if (auto ptr = GetEditorSection<AppObjectsSection>()->m_SelectedObject.Get())
+			{
+				GetEditorSection<PropertiesSection>()->m_ObjectToDraw.Get() = ptr;
+			}
 
-	//set the properties pannel selected object as the selected app object
-	GetEditorSection<PropertiesSection>()->m_ObjectToDraw.Get() = GetEditorSection<AppObjectsSection>()->m_SelectedObject.Get();
 
-	//render all sections
-	for (auto& sec : GetEditorSections())
+	//Create editor dockspace
+	bool open = true;
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar;
+	ImGui::SetNextWindowBgAlpha(0.f);
+	window_flags |=  ImGuiWindowFlags_NoCollapse;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	window_flags |= ImGuiWindowFlags_NoBackground;
+			
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("Editor", &open, window_flags);
+	DrawEditorMenuBar();
+	ImGui::PopStyleVar();
+	ImGuiID dockspace_id = ImGui::GetID("EditorDockspace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+	ImGui::PopStyleVar(2);
+	for (auto& sec : GetEditorSections()) //Draw all editor sections
+	{
 		sec->Render();
+	}
+	ImGui::End();
 
+	//end frame for all viewports (calls end frame on the scene)
+	for (auto& viewport : m_Viewports)
+	{
+		viewport->m_SelectedComponent.Get() = GetEditorSection<SceneObjectsSection>()->m_SelectedComponent.Get();
+		viewport->m_SelectedObject.Get() = GetEditorSection<SceneObjectsSection>()->m_SelectedObject.Get();
+		viewport->Render();
+	}
+
+	//remove viewports that were closed
+	Viewport* destroy = nullptr;
+	for (auto& viewport : m_Viewports)
+	{
+		if (viewport->m_Close)
+			destroy = viewport.get();
+	}
+	if (destroy)
+		DestroyViewport(destroy);
 }
 
 void EditorApp::BeginFrame()
 {
-	for (auto& window : GetWindows())
+	//Viewports
 	{
-		if (window->IsClosed()) continue;
-		window->StartFrame();
+		//begin frame for all viewports (requires imGui context)
+		bool InputSet = false;
+		for (auto& viewport : m_Viewports)
+		{
+			//forward input to viewport
+			if (!InputSet)
+			{
+				if (viewport->m_Scene)
+				{
+					GetEditorWindow()->GetInputManager().StopForwarding(viewport->m_Scene->GetInputManager());
+
+					//for camera movement and stuff
+					GetEditorWindow()->GetInputManager().StopForwarding(viewport->m_InputManager);
+				}
+				if (viewport->m_Scene && viewport->m_FocusedOnviewport)
+				{
+					GetEditorWindow()->GetInputManager().ForwardTo(viewport->m_Scene->GetInputManager());
+
+					//for camera movement and stuff
+					GetEditorWindow()->GetInputManager().ForwardTo(viewport->m_InputManager);
+					InputSet = true;
+				}
+			}
+
+			//set transform mode
+			viewport->m_TransformMode = ImGuizmo::OPERATION::TRANSLATE;
+		}
 	}
 }
 
 void EditorApp::EndFrame()
 {
-	for (auto& window : GetWindows())
+	for (auto& window : GetEditorWindows())
 	{
-		if(window->IsClosed()) continue;
-		if (window == GetEditorWindow())
-		{		
-			//if (m_ImGuiLayer.IsValid())
-			{
-				window->SetCurrentContext();
-				m_ImGuiLayer.Begin();
-				RenderUI();
-				m_ImGuiLayer.End();
-			}	
-		}
-
-		window->EndFrame();
+		if(window->GetWindow()->IsClosed()) continue;
+		window->Render();
 	}
 }
 
-Ref<Window> EditorApp::CreateNewWindow(const std::string& name, const vec2d& size)
+void EditorApp::DrawEditorMenuBar()
 {
-	Ref<Window> newWindow = MakeRef<Window>(name, size.x, size.y);
-	m_Windows.push_back(newWindow);
-	newWindow->BindOnWindowClosed(m_WindowCloseEvent);
-	return newWindow;
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Viewport"))
+		{
+			if (ImGui::MenuItem("Create New Viewport"))
+			{
+				CreateViewport(m_EditorScene);
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
 }
+
+Ref<Viewport> EditorApp::CreateViewport(Ref<Scene> scene)
+{
+	Ref<Viewport> viewport = MakeRef<Viewport>(scene, GetEditorWindow(), std::string("Viewport " + STRING(m_Viewports.size())));
+	m_Viewports.push_back(viewport);
+	return viewport;
+}
+
+void EditorApp::DestroyViewport(Viewport* viewport)
+{
+	VectorUtils::RemovePointerFromRefVector(viewport, m_Viewports);
+}
+

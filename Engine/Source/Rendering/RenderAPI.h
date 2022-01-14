@@ -4,6 +4,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Core/Log.h"
+#include "Rendering/Shader.h"
 
 struct RenderStats
 {
@@ -30,8 +31,6 @@ class DENGINE_API RenderAPI
 		void SetCurrentContext(GLFWwindow* windowContext);
 		void ClearCurrentContext();
 
-
-
 		GLFWwindow* GetThisContext() const
 		{
 			//ASSERT(m_windowContext);
@@ -43,14 +42,10 @@ class DENGINE_API RenderAPI
 			return glfwGetCurrentContext();
 		}
 
-		void Clear();
-		void SetClearColor(const color4& color);
-		void SetViewport(const vec2d& Size);
-
-		//void DrawIndexed(Shader& shader, VertexArray& vertexArray, IndexBuffer& indexBuffer, uint32_t indexCount = 0);
-		//void DrawIndexed(IndexBuffer& indexBuffer);
-		//void DrawInstanced(Shader& shader, VertexArray& vertexArray, IndexBuffer& indexBuffer, uint InstanceCount = 0, uint32_t indexCount = 0);
-		//void DrawInstanced(IndexBuffer& indexBuffer, uint InstanceCount);
+		void DrawIndexed(Shader& shader, VertexArray& vertexArray, IndexBuffer& indexBuffer, uint32_t indexCount = 0);
+		void DrawIndexed(IndexBuffer& indexBuffer);
+		void DrawInstanced(Shader& shader, VertexArray& vertexArray, IndexBuffer& indexBuffer, uint InstanceCount = 0, uint32_t indexCount = 0);
+		void DrawInstanced(IndexBuffer& indexBuffer, uint InstanceCount);
 
 		const vec2d& GetViewportSize() const
 		{
@@ -81,23 +76,23 @@ class DENGINE_API RenderAPI
 			m_Stats = RenderStats();
 		}
 
-		//void AddShaderToCache(Ref<Shader> shader, const std::string& shaderName);
+		void AddShaderToCache(Ref<Shader> shader, const std::string& shaderName);
 
-// 		Ref<Shader> GetShaderFromCache(const std::string& shaderName)
-// 		{
-// 			return m_ShaderCache[shaderName];
-// 		}
+		Ref<Shader> GetShaderFromCache(const std::string& shaderName)
+		{
+			return m_ShaderCache[shaderName];
+		}
 
-// 		std::vector<std::pair<std::string, Ref<Shader>>> GetAllShadersInCache() const
-// 		{
-// 			std::vector<std::pair<std::string, Ref<Shader>>> temp;
-// 			for (auto& pair : m_ShaderCache)
-// 			{
-// 				temp.push_back(pair);
-// 			}
-// 
-// 			return temp;
-// 		}
+		std::vector<std::pair<std::string, Ref<Shader>>> GetAllShadersInCache() const
+		{
+			std::vector<std::pair<std::string, Ref<Shader>>> temp;
+			for (auto& pair : m_ShaderCache)
+			{
+				temp.push_back(pair);
+			}
+
+			return temp;
+		}
 
 		void ReloadShader(const std::string& shaderName);
 		bool IsShaderInCache(const std::string& shaderName);
@@ -107,7 +102,7 @@ class DENGINE_API RenderAPI
 		vec2d m_LastViewportSize;
 
 		//Shader cache
-		//std::unordered_map<std::string, Ref<Shader>> m_ShaderCache;
+		std::unordered_map<std::string, Ref<Shader>> m_ShaderCache;
 
 		GLFWwindow* m_windowContext = nullptr;
 };

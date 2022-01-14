@@ -13,7 +13,9 @@ inline thisClass FromInt(int in) const { thisClass out; out.IntValue() = in; ret
 inline thisClass operator|(const EnumBase& other) const { return FromInt(ConstIntValue() | other.ConstIntValue()); } \
 inline thisClass operator|(int other) const { return FromInt(ConstIntValue() | other); }
 
-#define _ENUM_DEF_BEGIN() void DefineEnum() override { _EnumClass e = _EnumClass(); m_Enum = (int)e; } std::map<std::string, int> GetEnumMap() override { std::map<std::string, int> _StringMap;
+#define _ENUM_DEF_BEGIN() using EnumBase::EnumBase; ClassType GetType() const override { return typeid(this); } \
+void DefineEnum() override { _EnumClass e = _EnumClass(); m_Enum = (int)e; } std::map<std::string, int> GetEnumMap() override { std::map<std::string, int> _StringMap; 
+
 #define ENUM_DEF(EnumValue) _StringMap[#EnumValue] = _EnumClass::EnumValue;
 #define ENUM_DEF_END() return _StringMap; }
 
@@ -74,6 +76,11 @@ struct DENGINE_API EnumBase
 	virtual bool IsBitmask() const
 	{
 		return false;
+	}
+
+	virtual ClassType GetType() const
+	{
+		return typeid(this);
 	}
 
 	std::string ToString(int enumVal);

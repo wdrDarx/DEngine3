@@ -1,6 +1,35 @@
 #include "Property.h"
 
 
+inline void WritePropMetadata(BufferWritter& writter, const std::map<std::string, std::string>& metadata)
+{
+	BufferMap map;
+	for (auto& piece : metadata)
+	{
+		Buffer StringBuffer;
+		BufferWritter Stringwritter(StringBuffer);
+		Stringwritter.WriteString(piece.second);
+		map.AddPiece(piece.first, StringBuffer);
+	}
+	writter.WriteBuffer(map.MakeBuffer());
+}
+
+inline void ReadPropMetadata(BufferReader& reader, std::map<std::string, std::string>& metadata)
+{
+	BufferMap map;
+	Buffer mapBuffer;
+	reader.ReadBuffer(mapBuffer);
+	map.FromBuffer(mapBuffer);
+	for (auto& piece : map.GetDataPieces())
+	{
+		BufferReader StringReader(piece.second);
+		std::string Key = piece.first;
+		std::string Value;
+		StringReader.ReadString(Value);
+		metadata[Key] = Value;
+	}
+}
+
 Buffer Property::MakeBuffer() const
 {
 	PROFILE_FUNC()
@@ -8,7 +37,7 @@ Buffer Property::MakeBuffer() const
 	Buffer out;
 	BufferWritter writter(out);
 	writter.WriteString(m_Name);
-	writter.WriteString(m_Metadata);
+	WritePropMetadata(writter, m_Metadata);
 	writter.Write(&m_Flags, sizeof(int));
 	writter.WriteVec(MakeValueBuffer(m_Value)); // serialized value
 
@@ -21,7 +50,7 @@ void Property::FromBuffer(const Buffer& buffer)
 
 	BufferReader reader(buffer);
 	reader.ReadString(m_Name);
-	reader.ReadString(m_Metadata);
+	ReadPropMetadata(reader, m_Metadata);
 	reader.Read(&m_Flags, sizeof(int));
 	Buffer buf;
 	reader.ReadBuffer(buf); // read the serialized value
@@ -36,7 +65,7 @@ void Property::LoadAllMetadata(const Buffer& buffer)
 
 	BufferReader reader(buffer);
 	reader.ReadString(m_Name);
-	reader.ReadString(m_Metadata);
+	ReadPropMetadata(reader, m_Metadata);
 	reader.Read(&m_Flags, sizeof(int));
 }
 

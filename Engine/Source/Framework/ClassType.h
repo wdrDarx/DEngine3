@@ -29,15 +29,16 @@ struct ClassType
 		if (endpos == std::string::npos)
 			endpos = base.length(); //for non pointer types
 
-		if (auto classpos = base.find("class") != std::string::npos)
+		if (auto structpos = base.find("struct") != std::string::npos)
 		{
-			return Substring(base, classpos + std::string("class").length() - 1, endpos);
+			return Substring(base, structpos + std::string("struct").length() - 1, endpos);
 		}
 		else
-			if (auto structpos = base.find("struct") != std::string::npos)
+			if (auto classpos = base.find("class") != std::string::npos)
 			{
-				return Substring(base, structpos + std::string("struct").length() - 1, endpos);
+				return Substring(base, classpos + std::string("class").length() - 1, endpos);
 			}
+			
 		return "";
 	}
 

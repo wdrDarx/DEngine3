@@ -37,11 +37,6 @@ struct ObjectInitializer
 	//TODO make name non-copy
 	std::string Name;
 
-	/*  
-		optional name of associated module of this object (used mainly for auto deleting objects when a module gets unloaded)
-    */
-	std::string AssociatedModuleName;
-
 	//Construct flags
 	int Flags = 0;
 
@@ -66,7 +61,10 @@ struct ObjectInitializer
 		Flags = flags;
 	}
 
-	ObjectInitializer();
+	ObjectInitializer()
+	{
+
+	}
 };
 
 
@@ -103,7 +101,7 @@ public:
 	//empty constructor
 	ObjectBase()
 	{
-	
+		
 	}
 
 	virtual ~ObjectBase()
@@ -218,10 +216,8 @@ public:
 		return m_ObjectInitializer;
 	}
 
-	const std::string& GetAssociatedModuleName() const
-	{
-		return GetObjectInitializer().AssociatedModuleName;
-	}
+	//Get the module name by finding itself in the registry and checking from what module it was registered
+	const std::string& GetAssociatedModuleName();
 
 	//true if Initialize() has been called
 	bool IsInitialized() const
@@ -252,6 +248,9 @@ protected:
 	std::vector<Ref<Property>> m_Properties;
 
 private:
+
+	//stored name of the module that owns this class
+	std::string m_AssociatedModuleName;
 
 	//Misc flags
 	ObjectFlags m_ObjectFlags;

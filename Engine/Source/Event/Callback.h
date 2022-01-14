@@ -56,6 +56,11 @@ public:
 		}
 	}
 
+	bool HasAnyBinds() const
+	{
+		return m_EventDispatcher;
+	}
+
 	//called when the event is dispached to the bound object
 	std::function<void(EventType& event)> m_OnTrigger;
 

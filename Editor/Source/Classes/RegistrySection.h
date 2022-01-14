@@ -27,7 +27,14 @@ public:
 			for (auto& reg : ObjectReg.GetRegisteredKeys())
 			{
 				std::string RegName = "(" + reg.AssignedModuleName + ") " + reg.name;
-				ImGui::Text(RegName.c_str());
+				if (ImGui::Button(RegName.c_str()))
+				{
+					if (ClassUtils::IsObjectBaseOf(reg.Type, ClassType(typeid(SceneObject))))
+					{
+						Ref<SceneObject> obj = Cast<SceneObject>(ToRef<ObjectBase>(ObjectReg.Make(reg)));
+						GetEditorApp()->GetEditorScene()->AddSceneObject(obj);
+					}
+				}
 			}
 
 			ImGui::TreePop();

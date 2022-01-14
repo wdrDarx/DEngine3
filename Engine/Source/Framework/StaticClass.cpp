@@ -1,6 +1,5 @@
 #include "StaticClass.h"
 #include "Framework/ObjectBase.h"
-#include "Framework/AppObject.h"
 #include "Framework/Application.h"
 #include "Framework/Registry.h"
 

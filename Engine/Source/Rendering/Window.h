@@ -3,7 +3,7 @@
 #include "Event/Callback.h"
 #include "Event/Event.h"
 #include "Event/EventDispatcher.h"
-
+#include "Framework/Classes/InputManager.h"
 
 class Window;
 struct EventWindowClosed : public Event
@@ -16,6 +16,9 @@ struct EventWindowResized : public Event
 	Window* window;
 	vec2d NewSize;
 };
+
+struct EventWindowCursorEnter : public Event {};
+struct EventWindowCursorLeave : public Event {};
 
 //houses a window with a rendering context and input manager specific to this window
 class DENGINE_API Window
@@ -65,6 +68,11 @@ public:
 		return m_Window;
 	}
 
+	InputManager& GetInputManager()
+	{
+		return m_InputManager;
+	}
+
 	//this gives the cursor pos in window space which might not be accurate
 	const vec2d& GetLastCursorPos() const
 	{
@@ -82,17 +90,17 @@ public:
 
 	void SetUseRawMouseInput(bool use);
 
-// 	void SetInputMode(const InputMode& mode)
-// 	{
-// 		m_InputMode = mode;
-// 		SetUseRawMouseInput(mode == InputMode::GAME);
-// 		SetShowCursor(mode == InputMode::UI);
-// 	}
+	void SetInputMode(const InputMode& mode)
+	{
+		m_InputMode = mode;
+		SetUseRawMouseInput(mode == InputMode::GAME);
+		SetShowCursor(mode == InputMode::UI);
+	}
 
-// 	const InputMode& GetInputMode() const
-// 	{
-// 		return m_InputMode;
-// 	}
+	const InputMode& GetInputMode() const
+	{
+		return m_InputMode;
+	}
 
 private:
 
@@ -100,13 +108,13 @@ private:
 	vec2d m_LastCursorPos;
 
 	//used to mouse raw input stuff
-	//InputMode m_InputMode = InputMode::UI;
+	InputMode m_InputMode = InputMode::UI;
 
 	//calls window events
 	EventDispatcher m_EventDispatcher;
 
 	//main input manager recieveing any window inputs and relaying them
-	//InputManager m_InputManager;
+	InputManager m_InputManager;
 
 	GLFWwindow* m_Window;
 	Ref<RenderAPI> m_RenderAPI;

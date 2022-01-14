@@ -20,10 +20,11 @@ ThisClass() : Super(false) { DefineProperties(); }
 
 #define PROPERTIES_MEMBER_NAME m_Properties
 
-#define PROPS_BEGIN() void DefineProperties() override { Super::DefineProperties(); std::string _Category = "";
+#define PROPS_BEGIN() void DefineProperties() override { Super::DefineProperties(); std::string _Category = "Default"; std::map<std::string, std::string> _Metadata; _Metadata["Category"] = _Category;
 
-#define PROPS_CATEGORY(category) _Category = #category; 
-#define PROPDEF(member, flags) PROPERTIES_MEMBER_NAME.push_back(CreatePropertyFromMember(member, #member, _Category, flags));
+#define PROPS_CATEGORY(category) _Category = #category; _Metadata["Category"] = _Category;
+#define PROPDEF(member, flags) PROPERTIES_MEMBER_NAME.push_back(CreatePropertyFromMember(member, #member, _Metadata, flags));
+#define PROPDEF_NAME(member, name, flags) PROPERTIES_MEMBER_NAME.push_back(CreatePropertyFromMember(member, name, _Metadata, flags));
 
 #define PROPS_END()  }
 

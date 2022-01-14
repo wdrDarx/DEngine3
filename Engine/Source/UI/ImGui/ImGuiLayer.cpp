@@ -43,6 +43,13 @@ void ImGuiLayer::Begin()
 	if(!m_Window || !m_Window->isContextBound()) return;
 
 	ImGui::SetCurrentContext(m_ImGuidContext);
+	
+	{
+		auto io = ImGui::GetIO();
+		if(!io.Fonts->IsBuilt())
+			io.Fonts->Build();
+	}
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -71,7 +78,7 @@ void ImGuiLayer::Begin()
 	}
 
  	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
- 		window_flags |= ImGuiWindowFlags_NoBackground;
+ 		//window_flags |= ImGuiWindowFlags_NoBackground;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("DockSpace Demo", &open, window_flags);
@@ -95,6 +102,7 @@ void ImGuiLayer::End()
 	if (!m_Window || !m_Window->isContextBound()) return;
 
 	ImGui::SetCurrentContext(m_ImGuidContext);
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2((float)m_Window->GetWidth(),  (float)m_Window->GetHeight());
 

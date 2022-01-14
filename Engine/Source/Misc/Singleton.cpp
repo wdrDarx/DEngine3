@@ -2,7 +2,7 @@
 
 void SingletonCache::Store(const std::type_index& type, void* ptr)
 {
-	return; //using auto registers breaks this whole thing
+	//return; //using auto registers breaks this whole thing
 	m_PointerCache[type] = ptr;
 }
 

@@ -6,6 +6,9 @@ void ObjectBase::Initialize(const ObjectInitializer& initializer)
 {
 	PROFILE_FUNC()
 
+	//store the associated module name
+	GetAssociatedModuleName();
+
 	//assign the member initializer for later use
 	m_ObjectInitializer = initializer;
 
@@ -21,7 +24,7 @@ void ObjectBase::Initialize(const ObjectInitializer& initializer)
 	//assign random ID
 	if (initializer.Flags & ConstructFlags::RANDOMID)
 	{
-		m_ID = { Rand().Int64() };
+		m_ID = { GET_SINGLETON(Rand).Int64() };
 	}
 
 	//Define Properties
@@ -74,6 +77,9 @@ Buffer ObjectBase::GeneratePropBuffer() const
 
 	for (auto& prop : GetProperties())
 	{
+		if (prop->GetFlags() & PropFlags::NoSerialize)
+			continue;
+
 		PropsArray.AddPiece(prop->MakeBuffer());
 	}
 
@@ -103,7 +109,20 @@ void ObjectBase::LoadPropsFromBuffer(const Buffer& buffer)
 	}
 }
 
-ObjectInitializer::ObjectInitializer()
+const std::string& ObjectBase::GetAssociatedModuleName()
 {
-	AssociatedModuleName = GetCurrentModuleName();
+	if(!m_AssociatedModuleName.empty()) return m_AssociatedModuleName;
+
+	ObjectRegistry& ObjectReg = GET_SINGLETON(ObjectRegistry);
+	for (auto& reg : ObjectReg.GetRegisteredKeys())
+	{
+		if(reg.name == GetClassType().Name)
+		{ 
+			m_AssociatedModuleName = reg.AssignedModuleName;
+			return m_AssociatedModuleName;
+		}
+	}
+
+	return m_AssociatedModuleName;
 }
+

@@ -1,5 +1,5 @@
 #include "AppObject.h"
-#include "Application.h"
+#include "Framework/Application.h"
 
 void AppObject::OnUpdate(const Tick& tick)
 {
@@ -16,7 +16,7 @@ void AppObject::OnConstruct()
 	m_EventModuleUnloaded.Assign([&](EventModuleUnloaded& event)
 	{
 		//auto destroy if parent module is unloaded
-		if (event.ModuleName == GetObjectInitializer().AssociatedModuleName)
+		if (event.ModuleName == GetAssociatedModuleName())
 			GetApplication()->DestroyAppObject(this);
 	});
 

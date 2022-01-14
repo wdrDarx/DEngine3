@@ -19,7 +19,7 @@ public:
 
 		for (auto& obj : GetEditorApp()->GetAppObjects())
 		{
-			std::string Name = obj->GetName() + " (" + obj->GetObjectInitializer().AssociatedModuleName + ")";
+			std::string Name = obj->GetName() + " (" + obj->GetAssociatedModuleName() + ")";
 			ImGuiTreeNodeFlags flags = (m_SelectedObject.Get() == obj.get() ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 			flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 

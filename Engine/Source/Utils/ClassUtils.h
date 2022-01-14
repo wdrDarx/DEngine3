@@ -7,8 +7,14 @@ class StructBase;
 class ClassUtils
 {
 	public:
+
+		static bool IsTemplateType(const ClassType& type);
+		static std::string GetTemplateBaseFromType(const ClassType& type);
+		static std::string GetTemplateFromType(const ClassType& type);
+
 		//returns if the type is an Object
 		static bool IsObject(const ClassType& type);
+
 
 		//returns if an Object inherits from another Object, (this is very slow so dont call it too much, its better to do a cast)
 		static bool IsObjectBaseOf(const std::string& child, const std::string& parent);

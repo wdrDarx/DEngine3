@@ -1,6 +1,8 @@
 #pragma once
 #include "DEngine.h"
 #include "EditorSection.h"
+#include "EditorWindow.h"
+#include "Viewport.h"
 
 class EditorApp : public Application
 {
@@ -16,8 +18,17 @@ public:
 	void BeginFrame();
 	void EndFrame();
 
-	Ref<Window> CreateNewWindow(const std::string& name, const vec2d& size);
+	template<class T>
+	Ref<T> CreateNewEditorWindow()
+	{
+		FORCE_BASE_CLASS(T, EditorWindow);
 
+		Ref<T> newWindow = MakeRef<T>(this);
+		newWindow->Init();
+		m_EditorWindows.push_back(newWindow); 
+		newWindow->GetWindow()->BindOnWindowClosed(m_WindowCloseEvent);
+		return newWindow;
+	}
 
 	template<class T>
 	void CreateEditorSection(Window* targetWindow)
@@ -45,9 +56,9 @@ public:
 	}
 
 
-	std::vector<Ref<Window>>& GetWindows()
+	std::vector<Ref<EditorWindow>>& GetEditorWindows()
 	{
-		return m_Windows;
+		return m_EditorWindows;
 	}
 
 	std::vector<Ref<EditorSection>>& GetEditorSections()
@@ -59,6 +70,8 @@ public:
 	{
 		return m_EditorWindow;
 	}
+
+	void DrawEditorMenuBar();
 
 	ImGuiLayer& GetImGuiLayer()
 	{
@@ -75,15 +88,40 @@ public:
 		//need to call the next tick because the window still needs to destoy context
 		GetMainThread().ExecuteParams([&](Window* window)
 		{
+			auto remove = m_EditorWindows.end();
+			for (auto it = GetEditorWindows().begin(); it != GetEditorWindows().end(); it++)
+			{
+				if ((*it)->GetWindow().get() == window)
+				{
+					remove = it;
+					break;
+				}
+			}
 
-			VectorUtils::RemovePointerFromRefVector(window, m_Windows);
+			if (remove != m_EditorWindows.end())
+			{
+				m_EditorWindows.erase(remove);
+				return;
+			}
 
 		}, event.window);		
 	};
 
+	Ref<Viewport> CreateViewport(Ref<Scene> scene);
+	void DestroyViewport(Viewport* viewport);
+
+	std::vector<Ref<Viewport>> m_Viewports;
+
 	ImGuiLayer m_ImGuiLayer;
 	Ref<Window> m_EditorWindow = nullptr;
-	std::vector<Ref<Window>> m_Windows;
+	std::vector<Ref<EditorWindow>> m_EditorWindows;
 	std::vector<Ref<EditorSection>> m_EditorSections;
+
+	Ref<Scene> GetEditorScene()
+	{
+		return m_EditorScene;
+	};
+
+	Ref<Scene> m_EditorScene = nullptr;
 };
 

@@ -29,6 +29,10 @@ public:
 
 	void SetDarkTheme();
 
+	ImGuiContext* GetContext()
+	{
+		return m_ImGuidContext;
+	}
 
 private:
 	ImGuiContext* m_ImGuidContext;

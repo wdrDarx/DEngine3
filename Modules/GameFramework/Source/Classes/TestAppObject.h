@@ -37,7 +37,7 @@ struct GAMEFRAMEWORK EnumTest : public EnumBase
 		Layer_5 = BIT(6)
 	};
 
-	ENUM_DEF_BEGIN(EnumTest, Enum)
+	BITMASK_DEF_BEGIN(EnumTest, Enum)
 		ENUM_DEF(Layer_0);
 		ENUM_DEF(Layer_1);
 		ENUM_DEF(Layer_2);
@@ -57,6 +57,7 @@ class GAMEFRAMEWORK TestAppObject : public AppObject
 			PROPDEF(TestFloat, EditAnywhere)
 			PROPDEF(TestString, EditAnywhere)
 			PROPDEF(TestClass, EditAnywhere)
+		PROPS_CATEGORY(Tests);
 			PROPDEF(TestEnum, EditAnywhere)
 			PROPDEF(testStruct, EditAnywhere)
 			PROPDEF(testStruct2, EditAnywhere)
@@ -69,13 +70,13 @@ class GAMEFRAMEWORK TestAppObject : public AppObject
 			Super::OnConstruct();
 		};
 
-		ObjectClass TestClass = ClassType(typeid(AppObject));
+		ObjectClass<AppObject> TestClass;
 
 		int TestInt = 4;
 		float TestFloat = 69.f;
 		std::string TestString = "Osu sus";
 
-		EnumTest TestEnum;
+		EnumTest TestEnum = EnumTest::Enum::Layer_0;
 		TestStruct testStruct;
 		TestStruct2 testStruct2;
 
@@ -112,4 +113,25 @@ public:
 	};
 
 	std::string ChildString = "im not a child";
+};
+
+class GAMEFRAMEWORK TestSceneObject : public SceneObject
+{
+public:
+	OBJECT_CLASS_DEF(TestSceneObject, SceneObject)
+
+	PROPS_BEGIN()
+		PROPDEF(TestString, EditAnywhere);
+	PROPS_END()
+
+	void OnConstruct() override
+	{
+		Super::OnConstruct();
+
+		Root = CreateComponent<TransformComponent>("Root");
+		LOG_WARN("TestSceneObject");
+	}
+
+	Ref<TransformComponent> Root;
+	std::string TestString = "osu";
 };

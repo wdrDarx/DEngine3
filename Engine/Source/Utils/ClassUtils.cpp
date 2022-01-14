@@ -1,6 +1,44 @@
 #include "ClassUtils.h"
 #include "DEngine.h"
 
+bool ClassUtils::IsTemplateType(const ClassType& type)
+{
+	return (type.Name.find("<") != type.Name.npos && type.Name.find(">") != type.Name.npos);
+}
+
+std::string ClassUtils::GetTemplateBaseFromType(const ClassType& type)
+{
+	if (!IsTemplateType(type))
+	{
+		LOG_ERROR("Cant get template base from non temaplte type!");
+	}
+
+	return Substring(type.Name, 0, type.Name.find("<"));
+}
+
+std::string ClassUtils::GetTemplateFromType(const ClassType& type)
+{
+	if (!IsTemplateType(type))
+	{
+		LOG_ERROR("Cant get template from non temaplte type!");
+	}
+
+	std::string temp = Substring(type.Name, type.Name.find("<"), type.Name.find(">"));
+
+	//remove "class" from inside the template
+	if (auto classpos = temp.find("class") != std::string::npos)
+	{
+		return Substring(temp, classpos + std::string("class").length(), temp.length());
+	}
+	else //remove "typename"
+		if (auto classpos = temp.find("typename") != std::string::npos)
+		{
+			return Substring(temp, classpos + std::string("typename").length(), temp.length());
+		}
+
+	return temp;
+}
+
 bool ClassUtils::IsObject(const ClassType& type)
 {
 	if (type.Name == "ObjectBase") return true;

@@ -92,12 +92,12 @@ public:
 		m_Name = name;
 	}
 
-	std::string GetMetadata() const
+	const std::map<std::string, std::string>& GetMetadata() const
 	{
 		return m_Metadata;
 	}
 
-	void SetMetadata(const std::string& meta)
+	void SetMetadata(const std::map<std::string, std::string>& meta)
 	{
 		m_Metadata = meta;
 	}
@@ -141,7 +141,7 @@ public:
 	ClassType m_Type;
 
 	std::string m_Name;
-	std::string m_Metadata;
+	std::map<std::string, std::string> m_Metadata;
 	int m_Flags;
 	void* m_Value = nullptr;
 };
@@ -226,7 +226,7 @@ struct StaticProperty : public Property
 
 //Creates a property if the type passed in is registered with a prop type
 template<typename T>
-inline Ref<Property> CreatePropertyFromMember(T& member, const std::string& name, const std::string& metadata, int Flags)
+inline Ref<Property> CreatePropertyFromMember(T& member, const std::string& name, const std::map<std::string, std::string>& metadata = std::map<std::string, std::string>(), int Flags = 0)
 {
 	ClassType type(typeid(T));
 	PropertyRegistry& registry = GET_SINGLETON(PropertyRegistry);

@@ -14,51 +14,20 @@ void GameFramework::OnLoad()
 
 	LOG_WARN("Loaded Module : " + std::string(GetCurrentModuleName()));
 
-	REGISTER_PROPERTY(FunctionProperty);
-	REGISTER_PROPERTY(ObjectClassProperty);
+	
 
 	REGISTER_OBJECT(TestAppObject);
 	REGISTER_OBJECT(TestAppObject2);
+	REGISTER_OBJECT(TestSceneObject);
 
 	REGISTER_STRUCT(TestStruct);
 	REGISTER_STRUCT(TestStruct2);
 
 	REGISTER_ENUM(EnumTest);
 
-	GetApplication()->GetAppObject<PropertyDrawTypes>()->AddDrawMethod<FunctionProperty>([&](ImGuiContext* context, Property* prop)
-	{
-		ImGui::SetCurrentContext(context);
-		if(ImGui::Button("Function"))
-			(*((Function*)prop->GetValue()))();
-	});
-
-	GetApplication()->GetAppObject<PropertyDrawTypes>()->AddDrawMethod<ObjectClassProperty>([&](ImGuiContext* context, Property* prop)
-	{
-		ImGui::SetCurrentContext(context);
-		ObjectClass* value = (ObjectClass*)prop->GetValue();
-
-		if (ImGui::BeginCombo("", value->m_ClassName.c_str()))
-		{
-			ObjectRegistry& reg = GET_SINGLETON(ObjectRegistry);
-			for (auto& key : reg.GetRegisteredKeys())
-			{
-				if(!ClassUtils::IsObjectBaseOf(key.name, value->m_BaseClass))
-					continue;
-
-				bool selected = value->m_ClassName == key.name;
-				if (ImGui::Selectable(key.name.c_str(), selected))
-				{
-					value->m_ClassName = key.name;
-				}
-				if (selected)
-					ImGui::SetItemDefaultFocus();			
-			}
-
-			ImGui::EndCombo();
-		}
-	});
-
-	GetApplication()->CreateAppObject<TestAppObject>();
+	bool c = ClassUtils::IsTemplateType(ClassType(typeid(ObjectClass<ObjectBase>)));
+	std::string test = ClassUtils::GetTemplateBaseFromType(ClassType(typeid(ObjectClass<ObjectBase>)));
+	std::string test2 = ClassUtils::GetTemplateFromType(ClassType(typeid(ObjectClass<ObjectBase>)));
 
 	ObjectRegistry& reg = GET_SINGLETON(ObjectRegistry);
 	Ref<ObjectBase> TestChild = MakeRef<TestAppObject2>();
@@ -71,7 +40,9 @@ void GameFramework::OnLoad()
 	bool isObject = ClassUtils::IsObjectBaseOf(TestChild, TestParent2);
 	bool isChild = ClassUtils::IsObjectBaseOf(TestChild, TestParent3);
 	LOG_INFO(timer.GetSecondsElapsed());
-	
+
+
+	GetApplication()->CreateAppObject<TestAppObject>();
 }
 
 void GameFramework::TestMethod(const ArgList& args)
